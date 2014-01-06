@@ -21,8 +21,8 @@ module.exports = (input) ->
 		start() if not file || file.lines.length
 
 	index = (l) ->
-			restart()
-			file.index = l.split(' ').slice(1)
+		restart()
+		file.index = l.split(' ').slice(1)
 
 	from_file = (l) ->
 		restart()
@@ -62,7 +62,8 @@ module.exports = (input) ->
 	for l in lines
 		l = l.trim()
 		if not l then continue
-		m = _.find schema, (x) -> l.match(x[0])
+		m = _.find schema, (x) ->
+			l.match(x[0])
 		if m then m[1](l) else other(l)
 
 	return files
