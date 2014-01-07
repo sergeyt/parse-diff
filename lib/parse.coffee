@@ -5,10 +5,15 @@ _.str = require 'underscore.string'
 # http://www.gnu.org/software/diffutils/manual/diffutils.html#Unified-Format
 module.exports = (input) ->
 	return [] if not input
+	return [] if input.match /^\s+$/
+
+	lines = input.split '\n'
+	return [] if lines.length == 0
 
 	files = []
 	file = null
-	lines = input.split '\n'
+	ln_del = 0
+	ln_add = 0
 
 	start = ->
 		file =
@@ -32,39 +37,50 @@ module.exports = (input) ->
 		restart()
 		file.to = parseFile l
 
-	hunk = (l) ->
-		file.lines.push l
+	chunk = (l, m) ->
+		ln_del = +m[1]
+		ln_add = +m[3]
+		file.lines.push {type:'chunk', chunk:true, content:l}
 
 	del = (l) ->
-		file.lines.push l
+		file.lines.push {type:'del', del:true, ln:ln_del++, content:l}
 		file.deletions++
 
 	add = (l) ->
-		file.lines.push l
+		file.lines.push {type:'add', add:true, ln:ln_add++, content:l}
 		file.additions++
 
 	# todo end of line
-	other = (l) ->
+	normal = (l) ->
 		return if not file
-		file.lines.push l
+		file.lines.push {
+			type: 'normal'
+			normal: true
+			ln1: ln_del++
+			ln2: ln_add++
+			content: l
+		}
 
 	schema = [
 		[/^diff\s/, start],
 		[/^index\s/, index],
 		[/^---\s/, from_file]
 		[/^\+\+\+\s/, to_file]
-		# todo better hunk regexp
-		[/^@@\s.+\s@@$/, hunk],
+		[/^@@\s+\-(\d+),(\d+)\s+\+(\d+),(\d+)\s@@$/, chunk],
 		[/^-/, del],
 		[/^\+/, add]
 	]
 
+	parse = (l) ->
+		for p in schema
+			m = l.match p[0]
+			if m
+				p[1](l, m)
+				return true
+		return false
+
 	for l in lines
-		l = l.trim()
-		if not l then continue
-		m = _.find schema, (x) ->
-			l.match(x[0])
-		if m then m[1](l) else other(l)
+		normal(l) if not parse l
 
 	return files
 

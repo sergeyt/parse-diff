@@ -27,9 +27,9 @@ index 123..456 789
 		expect(file.from).to.be('file')
 		expect(file.to).to.be('file')
 		expect(file.lines.length).to.be(3)
-		expect(file.lines[0]).to.be('@@ -1,2 +1,2 @@')
-		expect(file.lines[1]).to.be('- line1')
-		expect(file.lines[2]).to.be('+ line2')
+		expect(file.lines[0].content).to.be('@@ -1,2 +1,2 @@')
+		expect(file.lines[1].content).to.be('- line1')
+		expect(file.lines[2].content).to.be('+ line2')
 
 	it 'should parse multiple files in diff', ->
 		diff = """
@@ -54,16 +54,16 @@ index 123..456 789
 		expect(file.from).to.be('file1')
 		expect(file.to).to.be('file1')
 		expect(file.lines.length).to.be(3)
-		expect(file.lines[0]).to.be('@@ -1,2 +1,2 @@')
-		expect(file.lines[1]).to.be('- line1')
-		expect(file.lines[2]).to.be('+ line2')
+		expect(file.lines[0].content).to.be('@@ -1,2 +1,2 @@')
+		expect(file.lines[1].content).to.be('- line1')
+		expect(file.lines[2].content).to.be('+ line2')
 		file = files[1]
 		expect(file.from).to.be('file2')
 		expect(file.to).to.be('file2')
 		expect(file.lines.length).to.be(3)
-		expect(file.lines[0]).to.be('@@ -1,3 +1,3 @@')
-		expect(file.lines[1]).to.be('- line1')
-		expect(file.lines[2]).to.be('+ line2')
+		expect(file.lines[0].content).to.be('@@ -1,3 +1,3 @@')
+		expect(file.lines[1].content).to.be('- line1')
+		expect(file.lines[2].content).to.be('+ line2')
 
 	it 'should parse gnu sample diff', ->
 		diff = """
