@@ -66,7 +66,7 @@ module.exports = (input) ->
 		[/^index\s/, index],
 		[/^---\s/, from_file]
 		[/^\+\+\+\s/, to_file]
-		[/^@@\s+\-(\d+),(\d+)\s+\+(\d+),(\d+)\s@@$/, chunk],
+		[/^@@\s+\-(\d+),(\d+)\s+\+(\d+),(\d+)\s@@/, chunk],
 		[/^-/, del],
 		[/^\+/, add]
 	]
