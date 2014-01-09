@@ -31,6 +31,28 @@ index 123..456 789
 		expect(file.lines[1].content).to.be('- line1')
 		expect(file.lines[2].content).to.be('+ line2')
 
+	it 'should parse diff with new file mode line', ->
+		diff = """
+diff --git a/test b/test
+new file mode 100644
+index 0000000..db81be4
+--- /dev/null
++++ b/test
+@@ -0,0 +1,2 @@
++line1
++line2
+"""
+		files = parse diff
+		expect(files.length).to.be(1)
+		file = files[0]
+		expect(file.new).to.be.true
+		expect(file.from).to.be('/dev/null')
+		expect(file.to).to.be('test')
+		expect(file.lines.length).to.be(3)
+		expect(file.lines[0].content).to.be('@@ -0,0 +1,2 @@')
+		expect(file.lines[1].content).to.be('+line1')
+		expect(file.lines[2].content).to.be('+line2')
+
 	it 'should parse multiple files in diff', ->
 		diff = """
 diff --git a/file1 b/file1

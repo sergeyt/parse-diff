@@ -25,6 +25,10 @@ module.exports = (input) ->
 	restart = ->
 		start() if not file || file.lines.length
 
+	new_file = ->
+		restart()
+		file.new = true
+
 	index = (line) ->
 		restart()
 		file.index = line.split(' ').slice(1)
@@ -64,7 +68,8 @@ module.exports = (input) ->
 	schema = [
 		# todo beter regexp to avoid detect normal line starting with diff
 		[/^diff\s/, start],
-		[/^index\s([\da-zA-Z])+\.\.([\da-zA-Z])+\s(\d+)$/, index],
+		[/^new file mode \d+$/, new_file],
+		[/^index\s[\da-zA-Z]+\.\.[\da-zA-Z]+(\s(\d+))?$/, index],
 		[/^---\s/, from_file]
 		[/^\+\+\+\s/, to_file]
 		[/^@@\s+\-(\d+),(\d+)\s+\+(\d+),(\d+)\s@@/, chunk],
