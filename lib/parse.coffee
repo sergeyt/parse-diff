@@ -25,45 +25,46 @@ module.exports = (input) ->
 	restart = ->
 		start() if not file || file.lines.length
 
-	index = (l) ->
+	index = (line) ->
 		restart()
-		file.index = l.split(' ').slice(1)
+		file.index = line.split(' ').slice(1)
 
-	from_file = (l) ->
+	from_file = (line) ->
 		restart()
-		file.from = parseFile l
+		file.from = parseFile line
 
-	to_file = (l) ->
+	to_file = (line) ->
 		restart()
-		file.to = parseFile l
+		file.to = parseFile line
 
-	chunk = (l, m) ->
-		ln_del = +m[1]
-		ln_add = +m[3]
-		file.lines.push {type:'chunk', chunk:true, content:l}
+	chunk = (line, match) ->
+		ln_del = +match[1]
+		ln_add = +match[3]
+		file.lines.push {type:'chunk', chunk:true, content:line}
 
-	del = (l) ->
-		file.lines.push {type:'del', del:true, ln:ln_del++, content:l}
+	del = (line) ->
+		file.lines.push {type:'del', del:true, ln:ln_del++, content:line}
 		file.deletions++
 
-	add = (l) ->
-		file.lines.push {type:'add', add:true, ln:ln_add++, content:l}
+	add = (line) ->
+		file.lines.push {type:'add', add:true, ln:ln_add++, content:line}
 		file.additions++
 
 	# todo end of line
-	normal = (l) ->
+	normal = (line) ->
 		return if not file
 		file.lines.push {
 			type: 'normal'
 			normal: true
 			ln1: ln_del++
 			ln2: ln_add++
-			content: l
+			content: line
 		}
 
 	schema = [
+		# todo beter regexp to avoid detect normal line starting with diff
 		[/^diff\s/, start],
-		[/^index\s/, index],
+		[/^index\s([\da-zA-Z])+\.\.([\da-zA-Z])+\s(\d+)$/, index],
 		[/^---\s/, from_file]
 		[/^\+\+\+\s/, to_file]
 		[/^@@\s+\-(\d+),(\d+)\s+\+(\d+),(\d+)\s@@/, chunk],
@@ -71,16 +72,16 @@ module.exports = (input) ->
 		[/^\+/, add]
 	]
 
-	parse = (l) ->
+	parse = (line) ->
 		for p in schema
-			m = l.match p[0]
+			m = line.match p[0]
 			if m
-				p[1](l, m)
+				p[1](line, m)
 				return true
 		return false
 
-	for l in lines
-		normal(l) if not parse l
+	for line in lines
+		normal(line) if not parse line
 
 	return files
 
