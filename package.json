@@ -17,20 +17,20 @@
     "Sergey Todyshev <stodyshev@gmail.com>"
   ],
   "dependencies": {
-    "coffee-script": "~1.7.1",
-    "underscore": "~1.6.0",
-    "underscore.string": "~2.3.3"
+    "coffee-script": "~1.7",
+    "underscore": "~1.6",
+    "underscore.string": "~2.3"
   },
   "devDependencies": {
-    "grunt": "~0.4.1",
-    "grunt-contrib-jshint": "~0.8.0",
-    "grunt-coffeelint": "~0.0.8",
-    "grunt-simple-mocha": "~0.4.0",
+    "grunt": "~0.4",
+    "grunt-contrib-jshint": "~0.10",
+    "grunt-coffeelint": "~0.0.10",
+    "grunt-simple-mocha": "~0.4",
     "grunt-npm": "~0.0.2",
-    "grunt-bump": "~0.0.7",
-    "grunt-auto-release": "~0.0.2",
-    "grunt-cli": "~0.1.11",
-    "expect.js": "~0.3.1"
+    "grunt-bump": "~0.0.13",
+    "grunt-auto-release": "~0.0.6",
+    "grunt-cli": "~0.1",
+    "expect.js": "~0.3"
   },
   "scripts": {
     "lint": "grunt lint",
