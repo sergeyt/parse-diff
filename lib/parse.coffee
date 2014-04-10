@@ -54,14 +54,14 @@ module.exports = (input) ->
 		file.lines.push {type:'add', add:true, ln:ln_add++, content:line}
 		file.additions++
 
-	# todo end of line
+	noeol = '\\ No newline at end of file'
 	normal = (line) ->
 		return if not file
 		file.lines.push {
 			type: 'normal'
 			normal: true
-			ln1: ln_del++
-			ln2: ln_add++
+			ln1: ln_del++ unless noeol
+			ln2: ln_add++ unless noeol
 			content: line
 		}
 
@@ -86,7 +86,7 @@ module.exports = (input) ->
 		return false
 
 	for line in lines
-		normal(line) if not parse line
+		normal(line) unless parse line
 
 	return files
 
