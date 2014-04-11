@@ -60,8 +60,8 @@ module.exports = (input) ->
 		file.lines.push {
 			type: 'normal'
 			normal: true
-			ln1: ln_del++ unless noeol
-			ln2: ln_add++ unless noeol
+			ln1: ln_del++ unless line is noeol
+			ln2: ln_add++ unless line is noeol
 			content: line
 		}
 
