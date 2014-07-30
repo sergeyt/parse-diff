@@ -1,2 +1,2 @@
-require('coffee-script');
-module.exports = require('./lib/parse');
+require('coffee-script/register');
+module.exports = require('./parse');

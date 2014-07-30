@@ -30,7 +30,8 @@
     "grunt-bump": "~0.0.15",
     "grunt-auto-release": "~0.0.6",
     "grunt-cli": "~0.1",
-    "expect.js": "~0.3"
+    "expect.js": "~0.3",
+    "grunt-contrib-coffee": "~0.10.1"
   },
   "scripts": {
     "lint": "grunt lint",
