@@ -41,6 +41,12 @@ module.exports = (grunt) ->
 				reporter: 'spec'
 			all: src: ['test/*.coffee']
 
+		coffee:
+			compile:
+				files:
+					'dist/parse-diff.js': 'parse.coffee'
+
+	grunt.loadNpmTasks 'grunt-contrib-coffee'
 	grunt.loadNpmTasks 'grunt-contrib-jshint'
 	grunt.loadNpmTasks 'grunt-coffeelint'
 	grunt.loadNpmTasks 'grunt-simple-mocha'
@@ -56,5 +62,6 @@ module.exports = (grunt) ->
 		]
 
 	grunt.registerTask 'lint', ['coffeelint', 'jshint']
-	grunt.registerTask 'test', ['lint', 'simplemocha']
+	grunt.registerTask 'build', ['coffee']
+	grunt.registerTask 'test', ['lint', 'simplemocha', 'build']
 	grunt.registerTask 'default', ['test']
