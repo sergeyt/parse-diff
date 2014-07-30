@@ -27,7 +27,7 @@
     "grunt-coffeelint": "~0.0.10",
     "grunt-simple-mocha": "~0.4",
     "grunt-npm": "~0.0.2",
-    "grunt-bump": "~0.0.13",
+    "grunt-bump": "~0.0.15",
     "grunt-auto-release": "~0.0.6",
     "grunt-cli": "~0.1",
     "expect.js": "~0.3"
