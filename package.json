@@ -17,8 +17,8 @@
     "Sergey Todyshev <stodyshev@gmail.com>"
   ],
   "dependencies": {
-    "coffee-script": "~1.7",
-    "underscore": "~1.6",
+    "coffee-script": "~1.8",
+    "underscore": "~1.7",
     "underscore.string": "~2.3"
   },
   "devDependencies": {
