@@ -14,7 +14,8 @@
     "parser"
   ],
   "contributors": [
-    "Sergey Todyshev <stodyshev@gmail.com>"
+    "Sergey Todyshev <stodyshev@gmail.com>",
+    "Scott Christopherson <scott@scott-christopherson.com>"
   ],
   "dependencies": {
     "coffee-script": "~1.8",
