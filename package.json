@@ -19,7 +19,7 @@
   "dependencies": {
     "coffee-script": "~1.8",
     "underscore": "~1.7",
-    "underscore.string": "~2.3"
+    "underscore.string": "~2.4"
   },
   "devDependencies": {
     "grunt": "~0.4",
@@ -31,7 +31,7 @@
     "grunt-auto-release": "~0.0.6",
     "grunt-cli": "~0.1",
     "expect.js": "~0.3",
-    "grunt-contrib-coffee": "~0.11"
+    "grunt-contrib-coffee": "~0.12"
   },
   "scripts": {
     "lint": "grunt lint",
