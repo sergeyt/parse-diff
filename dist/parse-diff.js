@@ -6,7 +6,7 @@
   _.str = require('underscore.string');
 
   module.exports = function(input) {
-    var add, chunk, del, file, files, from_file, index, line, lines, ln_add, ln_del, new_file, noeol, normal, parse, restart, schema, start, to_file, _i, _len;
+    var add, chunk, del, deleted_file, file, files, from_file, index, line, lines, ln_add, ln_del, new_file, noeol, normal, parse, restart, schema, start, to_file, _i, _len;
     if (!input) {
       return [];
     }
@@ -37,6 +37,10 @@
     new_file = function() {
       restart();
       return file["new"] = true;
+    };
+    deleted_file = function() {
+      restart();
+      return file.deleted = true;
     };
     index = function(line) {
       restart();
@@ -90,7 +94,7 @@
         content: line
       });
     };
-    schema = [[/^diff\s/, start], [/^new file mode \d+$/, new_file], [/^index\s[\da-zA-Z]+\.\.[\da-zA-Z]+(\s(\d+))?$/, index], [/^---\s/, from_file], [/^\+\+\+\s/, to_file], [/^@@\s+\-(\d+),(\d+)\s+\+(\d+),(\d+)\s@@/, chunk], [/^-/, del], [/^\+/, add]];
+    schema = [[/^diff\s/, start], [/^new file mode \d+$/, new_file], [/^deleted file mode \d+$/, deleted_file], [/^index\s[\da-zA-Z]+\.\.[\da-zA-Z]+(\s(\d+))?$/, index], [/^---\s/, from_file], [/^\+\+\+\s/, to_file], [/^@@\s+\-(\d+),(\d+)\s+\+(\d+),(\d+)\s@@/, chunk], [/^-/, del], [/^\+/, add]];
     parse = function(line) {
       var m, p, _i, _len;
       for (_i = 0, _len = schema.length; _i < _len; _i++) {

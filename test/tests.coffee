@@ -53,6 +53,28 @@ index 0000000..db81be4
 		expect(file.lines[1].content).to.be('+line1')
 		expect(file.lines[2].content).to.be('+line2')
 
+	it 'should parse diff with deleted file mode line', ->
+		diff = """
+diff --git a/test b/test
+deleted file mode 100644
+index db81be4..0000000
+--- b/test
++++ /dev/null
+@@ -1,2 +0,0 @@
+-line1
+-line2
+"""
+		files = parse diff
+		expect(files.length).to.be(1)
+		file = files[0]
+		expect(file.deleted).to.be.true
+		expect(file.from).to.be('test')
+		expect(file.to).to.be('/dev/null')
+		expect(file.lines.length).to.be(3)
+		expect(file.lines[0].content).to.be('@@ -1,2 +0,0 @@')
+		expect(file.lines[1].content).to.be('-line1')
+		expect(file.lines[2].content).to.be('-line2')
+
 	it 'should parse multiple files in diff', ->
 		diff = """
 diff --git a/file1 b/file1

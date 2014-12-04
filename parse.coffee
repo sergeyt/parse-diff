@@ -29,6 +29,10 @@ module.exports = (input) ->
 		restart()
 		file.new = true
 
+	deleted_file = ->
+		restart()
+		file.deleted = true
+
 	index = (line) ->
 		restart()
 		file.index = line.split(' ').slice(1)
@@ -69,6 +73,7 @@ module.exports = (input) ->
 		# todo beter regexp to avoid detect normal line starting with diff
 		[/^diff\s/, start],
 		[/^new file mode \d+$/, new_file],
+		[/^deleted file mode \d+$/, deleted_file],
 		[/^index\s[\da-zA-Z]+\.\.[\da-zA-Z]+(\s(\d+))?$/, index],
 		[/^---\s/, from_file]
 		[/^\+\+\+\s/, to_file]
