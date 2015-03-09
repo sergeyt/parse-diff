@@ -1,12 +1,12 @@
 (function() {
-  var parseFile, _;
+  var _, parseFile;
 
   _ = require('underscore');
 
   _.str = require('underscore.string');
 
   module.exports = function(input) {
-    var add, chunk, del, deleted_file, file, files, from_file, index, line, lines, ln_add, ln_del, new_file, noeol, normal, parse, restart, schema, start, to_file, _i, _len;
+    var add, chunk, del, deleted_file, file, files, from_file, i, index, len, line, lines, ln_add, ln_del, new_file, noeol, normal, parse, restart, schema, start, to_file;
     if (!input) {
       return [];
     }
@@ -96,9 +96,9 @@
     };
     schema = [[/^diff\s/, start], [/^new file mode \d+$/, new_file], [/^deleted file mode \d+$/, deleted_file], [/^index\s[\da-zA-Z]+\.\.[\da-zA-Z]+(\s(\d+))?$/, index], [/^---\s/, from_file], [/^\+\+\+\s/, to_file], [/^@@\s+\-(\d+),(\d+)\s+\+(\d+),(\d+)\s@@/, chunk], [/^-/, del], [/^\+/, add]];
     parse = function(line) {
-      var m, p, _i, _len;
-      for (_i = 0, _len = schema.length; _i < _len; _i++) {
-        p = schema[_i];
+      var i, len, m, p;
+      for (i = 0, len = schema.length; i < len; i++) {
+        p = schema[i];
         m = line.match(p[0]);
         if (m) {
           p[1](line, m);
@@ -107,8 +107,8 @@
       }
       return false;
     };
-    for (_i = 0, _len = lines.length; _i < _len; _i++) {
-      line = lines[_i];
+    for (i = 0, len = lines.length; i < len; i++) {
+      line = lines[i];
       if (!parse(line)) {
         normal(line);
       }
