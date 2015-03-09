@@ -18,21 +18,21 @@
     "Scott Christopherson <scott@scott-christopherson.com>"
   ],
   "dependencies": {
-    "coffee-script": "~1.8",
-    "underscore": "~1.7",
-    "underscore.string": "~2.4"
+    "coffee-script": "~1.9",
+    "underscore": "~1.8",
+    "underscore.string": "~3.0"
   },
   "devDependencies": {
     "grunt": "~0.4",
-    "grunt-contrib-jshint": "~0.10",
-    "grunt-coffeelint": "~0.0.10",
+    "grunt-contrib-jshint": "~0.11",
+    "grunt-coffeelint": "~0.0.13",
     "grunt-simple-mocha": "~0.4",
     "grunt-npm": "~0.0.2",
-    "grunt-bump": "~0.0.15",
+    "grunt-bump": "~0.3.0",
     "grunt-auto-release": "~0.0.6",
     "grunt-cli": "~0.1",
     "expect.js": "~0.3",
-    "grunt-contrib-coffee": "~0.12"
+    "grunt-contrib-coffee": "~0.13"
   },
   "scripts": {
     "lint": "grunt lint",
