@@ -75,6 +75,44 @@ index db81be4..0000000
 		expect(file.lines[1].content).to.be('-line1')
 		expect(file.lines[2].content).to.be('-line2')
 
+	it 'should parse diff with single line files', ->
+		diff = """
+diff --git a/file1 b/file1
+deleted file mode 100644
+index db81be4..0000000
+--- b/file1
++++ /dev/null
+@@ -1 +0,0 @@
+-line1
+diff --git a/file2 b/file2
+new file mode 100644
+index 0000000..db81be4
+--- /dev/null
++++ b/file2
+@@ -0,0 +1 @@
++line1
+"""
+		files = parse diff
+		expect(files.length).to.be(2)
+		file = files[0]
+		expect(file.deleted).to.be.true
+		expect(file.from).to.be('file1')
+		expect(file.to).to.be('/dev/null')
+		expect(file.lines.length).to.be(2)
+		expect(file.lines[0].content).to.be('@@ -1 +0,0 @@')
+		expect(file.lines[0].type).to.be('chunk')
+		expect(file.lines[1].content).to.be('-line1')
+		expect(file.lines[1].type).to.be('del')
+		file = files[1]
+		expect(file.new).to.be.true
+		expect(file.from).to.be('/dev/null')
+		expect(file.to).to.be('file2')
+		expect(file.lines.length).to.be(2)
+		expect(file.lines[0].content).to.be('@@ -0,0 +1 @@')
+		expect(file.lines[0].type).to.be('chunk')
+		expect(file.lines[1].content).to.be('+line1')
+		expect(file.lines[1].type).to.be('add')
+
 	it 'should parse multiple files in diff', ->
 		diff = """
 diff --git a/file1 b/file1
