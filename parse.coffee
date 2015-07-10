@@ -100,7 +100,7 @@ parseFile = (s) ->
 	s = _.str.ltrim s, '+'
 	s = s.trim()
 	# ignore possible time stamp
-	t = (/\d{4}-\d\d-\d\d\s\d\d:\d\d:\d\d(.\d+)?\s(\+|-)\d\d\d\d/).exec(s)
+	t = (/\t.*|\d{4}-\d\d-\d\d\s\d\d:\d\d:\d\d(.\d+)?\s(\+|-)\d\d\d\d/).exec(s)
 	s = s.substring(0, t.index).trim() if t
 	# ignore git prefixes a/ or b/
 	if s.match (/^(a|b)\//) then s.substr(2) else s

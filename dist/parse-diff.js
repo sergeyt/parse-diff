@@ -121,7 +121,7 @@
     s = _.str.ltrim(s, '-');
     s = _.str.ltrim(s, '+');
     s = s.trim();
-    t = /\d{4}-\d\d-\d\d\s\d\d:\d\d:\d\d(.\d+)?\s(\+|-)\d\d\d\d/.exec(s);
+    t = /\t.*|\d{4}-\d\d-\d\d\s\d\d:\d\d:\d\d(.\d+)?\s(\+|-)\d\d\d\d/.exec(s);
     if (t) {
       s = s.substring(0, t.index).trim();
     }

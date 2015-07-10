@@ -174,3 +174,26 @@ But after they are produced,
 		file = files[0]
 		expect(file.from).to.be('lao')
 		expect(file.to).to.be('tzu')
+
+	it 'should parse hg diff output', ->
+		diff = """
+diff -r 514fc757521e lib/parsers.coffee
+--- a/lib/parsers.coffee	Thu Jul 09 00:56:36 2015 +0200
++++ b/lib/parsers.coffee	Fri Jul 10 16:23:43 2015 +0200
+@@ -43,6 +43,9 @@
+             files[file] = { added: added, deleted: deleted }
+         files
+         
++    diff: (out) ->
++        files = {}
++
+ module.exports = Parsers
+ 
+ module.exports.version = (out) ->
+"""
+		files = parse diff
+		expect(files.length).to.be(1)
+		file = files[0]
+		expect(file.lines[0].content).to.be('@@ -43,6 +43,9 @@')
+		expect(file.from).to.be('lib/parsers.coffee')
+		expect(file.to).to.be('lib/parsers.coffee')
