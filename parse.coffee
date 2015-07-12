@@ -18,6 +18,7 @@ module.exports = (input) ->
 	start = ->
 		file =
 			lines: []
+			chunks: []
 			deletions: 0
 			additions: 0
 		files.push file
@@ -46,9 +47,16 @@ module.exports = (input) ->
 		file.to = parseFile line
 
 	chunk = (line, match) ->
-		ln_del = +match[1]
-		ln_add = +match[3]
-		file.lines.push {type:'chunk', chunk:true, content:line}
+		ln_del = oldStart = +match[1]
+		oldLines = +(match[2] || 0)
+		ln_add = newStart = +match[3]
+		newLines = +(match[4] || 0)
+		newChunk = {
+			type:'chunk', chunk:true, content:line,
+			oldStart, oldLines, newStart, newLines
+		}
+		file.lines.push newChunk
+		file.chunks.push newChunk
 
 	del = (line) ->
 		file.lines.push {type:'del', del:true, ln:ln_del++, content:line}

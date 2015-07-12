@@ -24,6 +24,7 @@
     start = function() {
       file = {
         lines: [],
+        chunks: [],
         deletions: 0,
         additions: 0
       };
@@ -55,13 +56,22 @@
       return file.to = parseFile(line);
     };
     chunk = function(line, match) {
-      ln_del = +match[1];
-      ln_add = +match[3];
-      return file.lines.push({
+      var newChunk, newLines, newStart, oldLines, oldStart;
+      ln_del = oldStart = +match[1];
+      oldLines = +(match[2] || 0);
+      ln_add = newStart = +match[3];
+      newLines = +(match[4] || 0);
+      newChunk = {
         type: 'chunk',
         chunk: true,
-        content: line
-      });
+        content: line,
+        oldStart: oldStart,
+        oldLines: oldLines,
+        newStart: newStart,
+        newLines: newLines
+      };
+      file.lines.push(newChunk);
+      return file.chunks.push(newChunk);
     };
     del = function(line) {
       file.lines.push({
