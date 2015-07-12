@@ -6,7 +6,7 @@
   _.str = require('underscore.string');
 
   module.exports = function(input) {
-    var add, chunk, del, deleted_file, file, files, from_file, i, index, len, line, lines, ln_add, ln_del, new_file, noeol, normal, parse, restart, schema, start, to_file;
+    var add, chunk, current, del, deleted_file, file, files, from_file, i, index, len, line, lines, ln_add, ln_del, new_file, noeol, normal, parse, restart, schema, start, to_file;
     if (!input) {
       return [];
     }
@@ -21,16 +21,17 @@
     file = null;
     ln_del = 0;
     ln_add = 0;
+    current = null;
     start = function() {
       file = {
-        lines: [],
+        chunks: [],
         deletions: 0,
         additions: 0
       };
       return files.push(file);
     };
     restart = function() {
-      if (!file || file.lines.length) {
+      if (!file || file.chunks.length) {
         return start();
       }
     };
@@ -57,14 +58,14 @@
     chunk = function(line, match) {
       ln_del = +match[1];
       ln_add = +match[3];
-      return file.lines.push({
-        type: 'chunk',
-        chunk: true,
-        content: line
-      });
+      current = {
+        content: line,
+        changes: []
+      };
+      return file.chunks.push(current);
     };
     del = function(line) {
-      file.lines.push({
+      current.changes.push({
         type: 'del',
         del: true,
         ln: ln_del++,
@@ -73,7 +74,7 @@
       return file.deletions++;
     };
     add = function(line) {
-      file.lines.push({
+      current.changes.push({
         type: 'add',
         add: true,
         ln: ln_add++,
@@ -86,7 +87,7 @@
       if (!file) {
         return;
       }
-      return file.lines.push({
+      return current.changes.push({
         type: 'normal',
         normal: true,
         ln1: line !== noeol ? ln_del++ : void 0,

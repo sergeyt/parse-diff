@@ -26,10 +26,12 @@ index 123..456 789
 		file = files[0]
 		expect(file.from).to.be('file')
 		expect(file.to).to.be('file')
-		expect(file.lines.length).to.be(3)
-		expect(file.lines[0].content).to.be('@@ -1,2 +1,2 @@')
-		expect(file.lines[1].content).to.be('- line1')
-		expect(file.lines[2].content).to.be('+ line2')
+		expect(file.chunks.length).to.be(1)
+		chunk = file.chunks[0]
+		expect(chunk.content).to.be('@@ -1,2 +1,2 @@')
+		expect(chunk.changes.length).to.be(2)
+		expect(chunk.changes[0].content).to.be('- line1')
+		expect(chunk.changes[1].content).to.be('+ line2')
 
 	it 'should parse diff with new file mode line', ->
 		diff = """
@@ -48,10 +50,10 @@ index 0000000..db81be4
 		expect(file.new).to.be.true
 		expect(file.from).to.be('/dev/null')
 		expect(file.to).to.be('test')
-		expect(file.lines.length).to.be(3)
-		expect(file.lines[0].content).to.be('@@ -0,0 +1,2 @@')
-		expect(file.lines[1].content).to.be('+line1')
-		expect(file.lines[2].content).to.be('+line2')
+		expect(file.chunks[0].content).to.be('@@ -0,0 +1,2 @@')
+		expect(file.chunks[0].changes.length).to.be(2)
+		expect(file.chunks[0].changes[0].content).to.be('+line1')
+		expect(file.chunks[0].changes[1].content).to.be('+line2')
 
 	it 'should parse diff with deleted file mode line', ->
 		diff = """
@@ -70,10 +72,10 @@ index db81be4..0000000
 		expect(file.deleted).to.be.true
 		expect(file.from).to.be('test')
 		expect(file.to).to.be('/dev/null')
-		expect(file.lines.length).to.be(3)
-		expect(file.lines[0].content).to.be('@@ -1,2 +0,0 @@')
-		expect(file.lines[1].content).to.be('-line1')
-		expect(file.lines[2].content).to.be('-line2')
+		expect(file.chunks[0].content).to.be('@@ -1,2 +0,0 @@')
+		expect(file.chunks[0].changes.length).to.be(2)
+		expect(file.chunks[0].changes[0].content).to.be('-line1')
+		expect(file.chunks[0].changes[1].content).to.be('-line2')
 
 	it 'should parse diff with single line files', ->
 		diff = """
@@ -98,20 +100,18 @@ index 0000000..db81be4
 		expect(file.deleted).to.be.true
 		expect(file.from).to.be('file1')
 		expect(file.to).to.be('/dev/null')
-		expect(file.lines.length).to.be(2)
-		expect(file.lines[0].content).to.be('@@ -1 +0,0 @@')
-		expect(file.lines[0].type).to.be('chunk')
-		expect(file.lines[1].content).to.be('-line1')
-		expect(file.lines[1].type).to.be('del')
+		expect(file.chunks[0].content).to.be('@@ -1 +0,0 @@')
+		expect(file.chunks[0].changes.length).to.be(1)
+		expect(file.chunks[0].changes[0].content).to.be('-line1')
+		expect(file.chunks[0].changes[0].type).to.be('del')
 		file = files[1]
 		expect(file.new).to.be.true
 		expect(file.from).to.be('/dev/null')
 		expect(file.to).to.be('file2')
-		expect(file.lines.length).to.be(2)
-		expect(file.lines[0].content).to.be('@@ -0,0 +1 @@')
-		expect(file.lines[0].type).to.be('chunk')
-		expect(file.lines[1].content).to.be('+line1')
-		expect(file.lines[1].type).to.be('add')
+		expect(file.chunks[0].content).to.be('@@ -0,0 +1 @@')
+		expect(file.chunks[0].changes.length).to.be(1)
+		expect(file.chunks[0].changes[0].content).to.be('+line1')
+		expect(file.chunks[0].changes[0].type).to.be('add')
 
 	it 'should parse multiple files in diff', ->
 		diff = """
@@ -135,17 +135,17 @@ index 123..456 789
 		file = files[0]
 		expect(file.from).to.be('file1')
 		expect(file.to).to.be('file1')
-		expect(file.lines.length).to.be(3)
-		expect(file.lines[0].content).to.be('@@ -1,2 +1,2 @@')
-		expect(file.lines[1].content).to.be('- line1')
-		expect(file.lines[2].content).to.be('+ line2')
+		expect(file.chunks[0].content).to.be('@@ -1,2 +1,2 @@')
+		expect(file.chunks[0].changes.length).to.be(2)
+		expect(file.chunks[0].changes[0].content).to.be('- line1')
+		expect(file.chunks[0].changes[1].content).to.be('+ line2')
 		file = files[1]
 		expect(file.from).to.be('file2')
 		expect(file.to).to.be('file2')
-		expect(file.lines.length).to.be(3)
-		expect(file.lines[0].content).to.be('@@ -1,3 +1,3 @@')
-		expect(file.lines[1].content).to.be('- line1')
-		expect(file.lines[2].content).to.be('+ line2')
+		expect(file.chunks[0].content).to.be('@@ -1,3 +1,3 @@')
+		expect(file.chunks[0].changes.length).to.be(2)
+		expect(file.chunks[0].changes[0].content).to.be('- line1')
+		expect(file.chunks[0].changes[1].content).to.be('+ line2')
 
 	it 'should parse gnu sample diff', ->
 		diff = """
@@ -174,6 +174,7 @@ But after they are produced,
 		file = files[0]
 		expect(file.from).to.be('lao')
 		expect(file.to).to.be('tzu')
+		expect(file.chunks.length).to.be(2)
 
 	it 'should parse hg diff output', ->
 		diff = """
@@ -194,6 +195,6 @@ diff -r 514fc757521e lib/parsers.coffee
 		files = parse diff
 		expect(files.length).to.be(1)
 		file = files[0]
-		expect(file.lines[0].content).to.be('@@ -43,6 +43,9 @@')
+		expect(file.chunks[0].content).to.be('@@ -43,6 +43,9 @@')
 		expect(file.from).to.be('lib/parsers.coffee')
 		expect(file.to).to.be('lib/parsers.coffee')
