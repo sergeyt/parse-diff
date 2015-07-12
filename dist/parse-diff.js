@@ -56,11 +56,18 @@
       return file.to = parseFile(line);
     };
     chunk = function(line, match) {
-      ln_del = +match[1];
-      ln_add = +match[3];
+      var newLines, newStart, oldLines, oldStart;
+      ln_del = oldStart = +match[1];
+      oldLines = +(match[2] || 0);
+      ln_add = newStart = +match[3];
+      newLines = +(match[4] || 0);
       current = {
         content: line,
-        changes: []
+        changes: [],
+        oldStart: oldStart,
+        oldLines: oldLines,
+        newStart: newStart,
+        newLines: newLines
       };
       return file.chunks.push(current);
     };

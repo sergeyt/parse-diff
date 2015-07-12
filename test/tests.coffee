@@ -109,6 +109,7 @@ index 0000000..db81be4
 		expect(file.from).to.be('/dev/null')
 		expect(file.to).to.be('file2')
 		expect(file.chunks[0].content).to.be('@@ -0,0 +1 @@')
+		expect(file.chunks[0].newLines).to.be(0)
 		expect(file.chunks[0].changes.length).to.be(1)
 		expect(file.chunks[0].changes[0].content).to.be('+line1')
 		expect(file.chunks[0].changes[0].type).to.be('add')
@@ -175,6 +176,16 @@ But after they are produced,
 		expect(file.from).to.be('lao')
 		expect(file.to).to.be('tzu')
 		expect(file.chunks.length).to.be(2)
+		chunk0 = file.chunks[0]
+		expect(chunk0.oldStart).to.be(1)
+		expect(chunk0.oldLines).to.be(7)
+		expect(chunk0.newStart).to.be(1)
+		expect(chunk0.newLines).to.be(6)
+		chunk1 = file.chunks[1]
+		expect(chunk1.oldStart).to.be(9)
+		expect(chunk1.oldLines).to.be(3)
+		expect(chunk1.newStart).to.be(8)
+		expect(chunk1.newLines).to.be(6)
 
 	it 'should parse hg diff output', ->
 		diff = """
