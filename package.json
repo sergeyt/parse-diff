@@ -15,7 +15,9 @@
   ],
   "contributors": [
     "Sergey Todyshev <stodyshev@gmail.com>",
-    "Scott Christopherson <scott@scott-christopherson.com>"
+    "Quest <quest@windwards.net>",
+    "Scott Christopherson <scott@scott-christopherson.com>",
+    "Quest <quest@lysator.liu.se>"
   ],
   "dependencies": {
     "coffee-script": "~1.9",
