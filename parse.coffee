@@ -14,16 +14,17 @@ module.exports = (input) ->
 	file = null
 	ln_del = 0
 	ln_add = 0
+	current = null
 
 	start = ->
 		file =
-			lines: []
+			chunks: []
 			deletions: 0
 			additions: 0
 		files.push file
 
 	restart = ->
-		start() if not file || file.lines.length
+		start() if not file || file.chunks.length
 
 	new_file = ->
 		restart()
@@ -46,22 +47,29 @@ module.exports = (input) ->
 		file.to = parseFile line
 
 	chunk = (line, match) ->
-		ln_del = +match[1]
-		ln_add = +match[3]
-		file.lines.push {type:'chunk', chunk:true, content:line}
+		ln_del = oldStart = +match[1]
+		oldLines = +(match[2] || 0)
+		ln_add = newStart = +match[3]
+		newLines = +(match[4] || 0)
+		current = {
+			content: line,
+			changes: [],
+			oldStart, oldLines, newStart, newLines
+		}
+		file.chunks.push current
 
 	del = (line) ->
-		file.lines.push {type:'del', del:true, ln:ln_del++, content:line}
+		current.changes.push {type:'del', del:true, ln:ln_del++, content:line}
 		file.deletions++
 
 	add = (line) ->
-		file.lines.push {type:'add', add:true, ln:ln_add++, content:line}
+		current.changes.push {type:'add', add:true, ln:ln_add++, content:line}
 		file.additions++
 
 	noeol = '\\ No newline at end of file'
 	normal = (line) ->
 		return if not file
-		file.lines.push {
+		current.changes.push {
 			type: 'normal'
 			normal: true
 			ln1: ln_del++ unless line is noeol
