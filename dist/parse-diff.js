@@ -1,9 +1,5 @@
 (function() {
-  var _, parseFile;
-
-  _ = require('underscore');
-
-  _.str = require('underscore.string');
+  var defaultToWhiteSpace, escapeRegExp, ltrim, makeString, parseFile, trimLeft;
 
   module.exports = function(input) {
     var add, chunk, current, del, deleted_file, file, files, from_file, i, index, len, line, lines, ln_add, ln_del, new_file, noeol, normal, parse, restart, schema, start, to_file;
@@ -126,8 +122,8 @@
 
   parseFile = function(s) {
     var t;
-    s = _.str.ltrim(s, '-');
-    s = _.str.ltrim(s, '+');
+    s = ltrim(s, '-');
+    s = ltrim(s, '+');
     s = s.trim();
     t = /\t.*|\d{4}-\d\d-\d\d\s\d\d:\d\d:\d\d(.\d+)?\s(\+|-)\d\d\d\d/.exec(s);
     if (t) {
@@ -138,6 +134,39 @@
     } else {
       return s;
     }
+  };
+
+  ltrim = function(s, chars) {
+    s = makeString(s);
+    if (!chars && trimLeft) {
+      return trimLeft.call(s);
+    }
+    chars = defaultToWhiteSpace(chars);
+    return s.replace(new RegExp('^' + chars + '+'), '');
+  };
+
+  makeString = function(s) {
+    if (s === null) {
+      return '';
+    } else {
+      return s + '';
+    }
+  };
+
+  trimLeft = String.prototype.trimLeft;
+
+  defaultToWhiteSpace = function(chars) {
+    if (chars === null) {
+      return '\\s';
+    }
+    if (chars.source) {
+      return chars.source;
+    }
+    return '[' + escapeRegExp(chars) + ']';
+  };
+
+  escapeRegExp = function(s) {
+    return makeString(s).replace(/([.*+?^=!:${}()|[\]\/\\])/g, '\\$1');
   };
 
 }).call(this);

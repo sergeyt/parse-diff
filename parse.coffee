@@ -1,6 +1,3 @@
-_ = require 'underscore'
-_.str = require 'underscore.string'
-
 # parses unified diff
 # http://www.gnu.org/software/diffutils/manual/diffutils.html#Unified-Format
 module.exports = (input) ->
@@ -104,11 +101,29 @@ module.exports = (input) ->
 	return files
 
 parseFile = (s) ->
-	s = _.str.ltrim s, '-'
-	s = _.str.ltrim s, '+'
+	s = ltrim s, '-'
+	s = ltrim s, '+'
 	s = s.trim()
 	# ignore possible time stamp
 	t = (/\t.*|\d{4}-\d\d-\d\d\s\d\d:\d\d:\d\d(.\d+)?\s(\+|-)\d\d\d\d/).exec(s)
 	s = s.substring(0, t.index).trim() if t
 	# ignore git prefixes a/ or b/
 	if s.match (/^(a|b)\//) then s.substr(2) else s
+
+ltrim = (s, chars) ->
+	s = makeString(s)
+	return trimLeft.call(s) if !chars and trimLeft
+	chars = defaultToWhiteSpace(chars)
+	return s.replace(new RegExp('^' + chars + '+'), '')
+
+makeString = (s) -> if s == null then '' else s + ''
+
+trimLeft = String.prototype.trimLeft
+
+defaultToWhiteSpace = (chars) ->
+  return '\\s' if chars == null
+  return chars.source if chars.source
+  return '[' + escapeRegExp(chars) + ']'
+
+escapeRegExp = (s) ->
+	makeString(s).replace(/([.*+?^=!:${}()|[\]\/\\])/g, '\\$1')
