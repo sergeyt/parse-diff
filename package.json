@@ -19,10 +19,8 @@
     "Scott Christopherson <scott@scott-christopherson.com>",
     "Quest <quest@lysator.liu.se>"
   ],
-  "dependencies": {
-    "coffee-script": "~1.9"
-  },
   "devDependencies": {
+    "coffee-script": "~1.9",
     "grunt": "~0.4.5",
     "grunt-contrib-jshint": "~0.11",
     "grunt-coffeelint": "~0.0.13",

@@ -43,8 +43,10 @@ module.exports = (grunt) ->
 
 		coffee:
 			compile:
+				options:
+					bare: true
 				files:
-					'dist/parse-diff.js': 'parse.coffee'
+					'index.js': 'parse.coffee'
 
 	grunt.loadNpmTasks 'grunt-contrib-coffee'
 	grunt.loadNpmTasks 'grunt-contrib-jshint'
@@ -61,7 +63,7 @@ module.exports = (grunt) ->
 			'npm-publish'
 		]
 
-	grunt.registerTask 'lint', ['coffeelint', 'jshint']
+	grunt.registerTask 'lint', ['coffeelint']
 	grunt.registerTask 'build', ['coffee']
-	grunt.registerTask 'test', ['lint', 'simplemocha', 'build']
+	grunt.registerTask 'test', ['lint', 'build', 'simplemocha']
 	grunt.registerTask 'default', ['test']
