@@ -77,6 +77,20 @@ index db81be4..0000000
 		expect(file.chunks[0].changes[0].content).to.be('-line1')
 		expect(file.chunks[0].changes[1].content).to.be('-line2')
 
+	it 'should parse diff with deleted file mode line and no chunk', ->
+		diff = """
+diff --git a/test b/test
+deleted file mode 100644
+index db81be4..0000000
+"""
+		files = parse diff
+		expect(files.length).to.be(1)
+		file = files[0]
+		expect(file.deleted).to.be.true
+		expect(file.from).to.be('test')
+		expect(file.to).to.be.undefined
+		expect(file.chunks).to.have.length(0)
+
 	it 'should parse diff with single line files', ->
 		diff = """
 diff --git a/file1 b/file1

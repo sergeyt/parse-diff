@@ -17,12 +17,15 @@ module.exports = function(input) {
   ln_del = 0;
   ln_add = 0;
   current = null;
-  start = function() {
+  start = function(line) {
     file = {
       chunks: [],
       deletions: 0,
       additions: 0
     };
+    if (line != null ? line.match(/^diff --git a\/(.+) b\/.+$/) : void 0) {
+      file.from = RegExp.$1;
+    }
     return files.push(file);
   };
   restart = function() {
