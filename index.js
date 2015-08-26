@@ -1,7 +1,7 @@
-var defaultToWhiteSpace, escapeRegExp, ltrim, makeString, parseFile, trimLeft;
+var defaultToWhiteSpace, escapeRegExp, ltrim, makeString, parseFile, parseFileFallback, trimLeft;
 
 module.exports = function(input) {
-  var add, chunk, current, del, deleted_file, file, files, from_file, i, index, len, line, lines, ln_add, ln_del, new_file, noeol, normal, parse, restart, schema, start, to_file;
+  var add, chunk, current, del, deleted_file, file, files, from_file, index, j, len, line, lines, ln_add, ln_del, new_file, noeol, normal, parse, restart, schema, start, to_file;
   if (!input) {
     return [];
   }
@@ -17,13 +17,21 @@ module.exports = function(input) {
   ln_del = 0;
   ln_add = 0;
   current = null;
-  start = function() {
+  start = function(line) {
+    var fileNames;
     file = {
       chunks: [],
       deletions: 0,
       additions: 0
     };
-    return files.push(file);
+    files.push(file);
+    if (!file.to && !file.from) {
+      fileNames = parseFile(line);
+      if (fileNames) {
+        file.from = fileNames[0];
+        return file.to = fileNames[1];
+      }
+    }
   };
   restart = function() {
     if (!file || file.chunks.length) {
@@ -32,11 +40,13 @@ module.exports = function(input) {
   };
   new_file = function() {
     restart();
-    return file["new"] = true;
+    file["new"] = true;
+    return file.from = '/dev/null';
   };
   deleted_file = function() {
     restart();
-    return file.deleted = true;
+    file.deleted = true;
+    return file.to = '/dev/null';
   };
   index = function(line) {
     restart();
@@ -44,11 +54,11 @@ module.exports = function(input) {
   };
   from_file = function(line) {
     restart();
-    return file.from = parseFile(line);
+    return file.from = parseFileFallback(line);
   };
   to_file = function(line) {
     restart();
-    return file.to = parseFile(line);
+    return file.to = parseFileFallback(line);
   };
   chunk = function(line, match) {
     var newLines, newStart, oldLines, oldStart;
@@ -99,9 +109,9 @@ module.exports = function(input) {
   };
   schema = [[/^diff\s/, start], [/^new file mode \d+$/, new_file], [/^deleted file mode \d+$/, deleted_file], [/^index\s[\da-zA-Z]+\.\.[\da-zA-Z]+(\s(\d+))?$/, index], [/^---\s/, from_file], [/^\+\+\+\s/, to_file], [/^@@\s+\-(\d+),?(\d+)?\s+\+(\d+),?(\d+)?\s@@/, chunk], [/^-/, del], [/^\+/, add]];
   parse = function(line) {
-    var i, len, m, p;
-    for (i = 0, len = schema.length; i < len; i++) {
-      p = schema[i];
+    var j, len, m, p;
+    for (j = 0, len = schema.length; j < len; j++) {
+      p = schema[j];
       m = line.match(p[0]);
       if (m) {
         p[1](line, m);
@@ -110,8 +120,8 @@ module.exports = function(input) {
     }
     return false;
   };
-  for (i = 0, len = lines.length; i < len; i++) {
-    line = lines[i];
+  for (j = 0, len = lines.length; j < len; j++) {
+    line = lines[j];
     if (!parse(line)) {
       normal(line);
     }
@@ -120,6 +130,18 @@ module.exports = function(input) {
 };
 
 parseFile = function(s) {
+  var fileNames;
+  if (!s) {
+    return;
+  }
+  fileNames = s.split(' ').slice(-2);
+  fileNames.map(function(fileName, i) {
+    return fileNames[i] = fileName.replace(/^(a|b)\//, '');
+  });
+  return fileNames;
+};
+
+parseFileFallback = function(s) {
   var t;
   s = ltrim(s, '-');
   s = ltrim(s, '+');

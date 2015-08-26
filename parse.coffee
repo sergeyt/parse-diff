@@ -13,12 +13,19 @@ module.exports = (input) ->
 	ln_add = 0
 	current = null
 
-	start = ->
+	start = (line) ->
 		file =
 			chunks: []
 			deletions: 0
 			additions: 0
 		files.push file
+
+		if not file.to and not file.from
+			fileNames = parseFile line
+
+			if fileNames
+				file.from = fileNames[0]
+				file.to = fileNames[1]
 
 	restart = ->
 		start() if not file || file.chunks.length
@@ -26,10 +33,12 @@ module.exports = (input) ->
 	new_file = ->
 		restart()
 		file.new = true
+		file.from = '/dev/null'
 
 	deleted_file = ->
 		restart()
 		file.deleted = true
+		file.to = '/dev/null'
 
 	index = (line) ->
 		restart()
@@ -37,11 +46,11 @@ module.exports = (input) ->
 
 	from_file = (line) ->
 		restart()
-		file.from = parseFile line
+		file.from = parseFileFallback line
 
 	to_file = (line) ->
 		restart()
-		file.to = parseFile line
+		file.to = parseFileFallback line
 
 	chunk = (line, match) ->
 		ln_del = oldStart = +match[1]
@@ -80,8 +89,8 @@ module.exports = (input) ->
 		[/^new file mode \d+$/, new_file],
 		[/^deleted file mode \d+$/, deleted_file],
 		[/^index\s[\da-zA-Z]+\.\.[\da-zA-Z]+(\s(\d+))?$/, index],
-		[/^---\s/, from_file]
-		[/^\+\+\+\s/, to_file]
+		[/^---\s/, from_file],
+		[/^\+\+\+\s/, to_file],
 		[/^@@\s+\-(\d+),?(\d+)?\s+\+(\d+),?(\d+)?\s@@/, chunk],
 		[/^-/, del],
 		[/^\+/, add]
@@ -101,6 +110,16 @@ module.exports = (input) ->
 	return files
 
 parseFile = (s) ->
+	return if not s
+
+	fileNames = s.split(' ').slice(-2)
+	fileNames.map (fileName, i) ->
+		fileNames[i] = fileName.replace(/^(a|b)\//, '')
+
+	return fileNames
+
+# fallback function to overwrite file.from and file.to if executed
+parseFileFallback = (s) ->
 	s = ltrim s, '-'
 	s = ltrim s, '+'
 	s = s.trim()

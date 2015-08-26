@@ -195,12 +195,12 @@ diff -r 514fc757521e lib/parsers.coffee
 @@ -43,6 +43,9 @@
              files[file] = { added: added, deleted: deleted }
          files
-         
+
 +    diff: (out) ->
 +        files = {}
 +
  module.exports = Parsers
- 
+
  module.exports.version = (out) ->
 """
 		files = parse diff
@@ -209,3 +209,27 @@ diff -r 514fc757521e lib/parsers.coffee
 		expect(file.chunks[0].content).to.be('@@ -43,6 +43,9 @@')
 		expect(file.from).to.be('lib/parsers.coffee')
 		expect(file.to).to.be('lib/parsers.coffee')
+
+	it 'should parse file names for n new empty file', ->
+		diff = """
+diff --git a/newFile.txt b/newFile.txt
+new file mode 100644
+index 0000000..e6a2e28
+"""
+		files = parse diff
+		expect(files.length).to.be(1)
+		file = files[0]
+		expect(file.from).to.be('/dev/null')
+		expect(file.to).to.be('newFile.txt')
+
+	it 'should parse file names for a deleted file', ->
+		diff = """
+diff --git a/deletedFile.txt b/deletedFile.txt
+deleted file mode 100644
+index e6a2e28..0000000
+"""
+		files = parse diff
+		expect(files.length).to.be(1)
+		file = files[0]
+		expect(file.from).to.be('deletedFile.txt')
+		expect(file.to).to.be('/dev/null')
