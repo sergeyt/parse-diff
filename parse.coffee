@@ -13,11 +13,15 @@ module.exports = (input) ->
 	ln_add = 0
 	current = null
 
-	start = ->
+	start = (line) ->
 		file =
 			chunks: []
 			deletions: 0
 			additions: 0
+
+		if line?.match /^diff --git a\/(.+) b\/.+$/
+			file.from = RegExp.$1
+
 		files.push file
 
 	restart = ->
