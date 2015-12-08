@@ -85,6 +85,7 @@ module.exports = (input) ->
 
 	schema = [
 		# todo beter regexp to avoid detect normal line starting with diff
+		[/^\s+/, normal]
 		[/^diff\s/, start],
 		[/^new file mode \d+$/, new_file],
 		[/^deleted file mode \d+$/, deleted_file],
@@ -105,7 +106,7 @@ module.exports = (input) ->
 		return false
 
 	for line in lines
-		normal(line) unless parse line
+		parse line
 
 	return files
 
