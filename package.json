@@ -17,7 +17,9 @@
     "Sergey Todyshev <stodyshev@gmail.com>",
     "Quest <quest@windwards.net>",
     "Scott Christopherson <scott@scott-christopherson.com>",
-    "Quest <quest@lysator.liu.se>"
+    "Quest <quest@lysator.liu.se>",
+    "Sung Won Cho <mikeswcho@gmail.com>",
+    "just-boris <just-boris@yandex-team.ru>"
   ],
   "devDependencies": {
     "coffee-script": "~1.10",
