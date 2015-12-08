@@ -155,16 +155,16 @@ index 123..456 789
 @@ -1,7 +1,6 @@
 -The Way that can be told of is not the eternal Way;
 -The name that can be named is not the eternal name.
-The Nameless is the origin of Heaven and Earth;
+ The Nameless is the origin of Heaven and Earth;
 -The Named is the mother of all things.
 +The named is the mother of all things.
 +
-Therefore let there always be non-being,
+ Therefore let there always be non-being,
 	so we may see their subtlety,
 And let there always be being,
 @@ -9,3 +8,6 @@
-The two are the same,
-But after they are produced,
+ The two are the same,
+ But after they are produced,
 	they have different names.
 +They both may be called deep and profound.
 +Deeper and more profound,
@@ -209,6 +209,36 @@ diff -r 514fc757521e lib/parsers.coffee
 		expect(file.chunks[0].content).to.be('@@ -43,6 +43,9 @@')
 		expect(file.from).to.be('lib/parsers.coffee')
 		expect(file.to).to.be('lib/parsers.coffee')
+
+	it 'should parse svn diff output', ->
+		diff = """
+Index: new.txt
+===================================================================
+--- new.txt	(revision 0)
++++ new.txt	(working copy)
+@@ -0,0 +1 @@
++test
+Index: text.txt
+===================================================================
+--- text.txt	(revision 6)
++++ text.txt	(working copy)
+@@ -1,7 +1,5 @@
+-This part of the
+-document has stayed the
+-same from version to
+-version.  It shouldn't
++This is an important
++notice! It shouldn't
+ be shown if it doesn't
+ change.  Otherwise, that
+ would not be helping to
+"""
+		files = parse diff
+		expect(files.length).to.be(2)
+		file = files[0]
+		expect(file.from).to.be('new.txt')
+		expect(file.to).to.be('new.txt')
+		expect(file.chunks[0].changes.length).to.be(1)
 
 	it 'should parse file names for n new empty file', ->
 		diff = """
