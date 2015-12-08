@@ -107,7 +107,7 @@ module.exports = function(input) {
       content: line
     });
   };
-  schema = [[/^diff\s/, start], [/^new file mode \d+$/, new_file], [/^deleted file mode \d+$/, deleted_file], [/^index\s[\da-zA-Z]+\.\.[\da-zA-Z]+(\s(\d+))?$/, index], [/^---\s/, from_file], [/^\+\+\+\s/, to_file], [/^@@\s+\-(\d+),?(\d+)?\s+\+(\d+),?(\d+)?\s@@/, chunk], [/^-/, del], [/^\+/, add]];
+  schema = [[/^\s+/, normal], [/^diff\s/, start], [/^new file mode \d+$/, new_file], [/^deleted file mode \d+$/, deleted_file], [/^index\s[\da-zA-Z]+\.\.[\da-zA-Z]+(\s(\d+))?$/, index], [/^---\s/, from_file], [/^\+\+\+\s/, to_file], [/^@@\s+\-(\d+),?(\d+)?\s+\+(\d+),?(\d+)?\s@@/, chunk], [/^-/, del], [/^\+/, add]];
   parse = function(line) {
     var j, len, m, p;
     for (j = 0, len = schema.length; j < len; j++) {
@@ -122,9 +122,7 @@ module.exports = function(input) {
   };
   for (j = 0, len = lines.length; j < len; j++) {
     line = lines[j];
-    if (!parse(line)) {
-      normal(line);
-    }
+    parse(line);
   }
   return files;
 };
