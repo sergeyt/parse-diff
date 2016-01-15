@@ -1,6 +1,6 @@
 {
   "name": "parse-diff",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "Unified diff parser",
   "author": "Sergey Todyshev <stodyshev@gmail.com>",
   "main": "index.js",
