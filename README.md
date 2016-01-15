@@ -1,7 +1,7 @@
 [![Built with Grunt](https://cdn.gruntjs.com/builtwith.png)](http://gruntjs.com/)
 [![Build Status](https://drone.io/github.com/sergeyt/parse-diff/status.png)](https://drone.io/github.com/sergeyt/parse-diff/latest)
-[![Deps Status](https://david-dm.org/sergeyt/parse-diff.png)](https://david-dm.org/sergeyt/parse-diff)
 [![DevDeps Status](https://david-dm.org/sergeyt/parse-diff/dev-status.png)](https://david-dm.org/sergeyt/parse-diff#info=devDependencies)
+[![Total downloads](https://img.shields.io/npm/dt/parse-diff.svg)](https://www.npmjs.com/package/parse-diff)
 
 [![NPM](https://nodei.co/npm/parse-diff.png?downloads=true&stars=true)](https://nodei.co/npm/parse-diff/)
 
