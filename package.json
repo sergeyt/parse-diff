@@ -4,7 +4,7 @@
   "description": "Unified diff parser",
   "author": "Sergey Todyshev <stodyshev@gmail.com>",
   "main": "index.js",
-	"license": "MIT",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git@github.com:sergeyt/parse-diff.git"
