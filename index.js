@@ -1,7 +1,7 @@
 var defaultToWhiteSpace, escapeRegExp, ltrim, makeString, parseFile, parseFileFallback, trimLeft;
 
 module.exports = function(input) {
-  var add, chunk, current, del, deleted_file, file, files, from_file, index, j, len, line, lines, ln_add, ln_del, new_file, noeol, normal, parse, restart, schema, start, to_file;
+  var add, chunk, current, del, deleted_file, eof, file, files, from_file, index, j, len, line, lines, ln_add, ln_del, new_file, normal, parse, restart, schema, start, to_file;
   if (!input) {
     return [];
   }
@@ -94,20 +94,31 @@ module.exports = function(input) {
     });
     return file.additions++;
   };
-  noeol = '\\ No newline at end of file';
   normal = function(line) {
-    if (!file) {
-      return;
-    }
     return current.changes.push({
       type: 'normal',
       normal: true,
-      ln1: line !== noeol ? ln_del++ : void 0,
-      ln2: line !== noeol ? ln_add++ : void 0,
+      ln1: ln_del++,
+      ln2: ln_add++,
       content: line
     });
   };
-  schema = [[/^\s+/, normal], [/^diff\s/, start], [/^new file mode \d+$/, new_file], [/^deleted file mode \d+$/, deleted_file], [/^index\s[\da-zA-Z]+\.\.[\da-zA-Z]+(\s(\d+))?$/, index], [/^---\s/, from_file], [/^\+\+\+\s/, to_file], [/^@@\s+\-(\d+),?(\d+)?\s+\+(\d+),?(\d+)?\s@@/, chunk], [/^-/, del], [/^\+/, add]];
+  eof = function(line) {
+    var obj, recentChange, ref;
+    ref = current.changes, recentChange = ref[ref.length - 1];
+    return current.changes.push((
+      obj = {
+        type: recentChange.type
+      },
+      obj["" + recentChange.type] = true,
+      obj.ln1 = recentChange.ln1,
+      obj.ln2 = recentChange.ln2,
+      obj.ln = recentChange.ln,
+      obj.content = line,
+      obj
+    ));
+  };
+  schema = [[/^\s+/, normal], [/^diff\s/, start], [/^new file mode \d+$/, new_file], [/^deleted file mode \d+$/, deleted_file], [/^index\s[\da-zA-Z]+\.\.[\da-zA-Z]+(\s(\d+))?$/, index], [/^---\s/, from_file], [/^\+\+\+\s/, to_file], [/^@@\s+\-(\d+),?(\d+)?\s+\+(\d+),?(\d+)?\s@@/, chunk], [/^-/, del], [/^\+/, add], [/^\\ No newline at end of file$/, eof]];
   parse = function(line) {
     var j, len, m, p;
     for (j = 0, len = schema.length; j < len; j++) {
