@@ -72,20 +72,30 @@ module.exports = (input) ->
 		current.changes.push {type:'add', add:true, ln:ln_add++, content:line}
 		file.additions++
 
-	noeol = '\\ No newline at end of file'
 	normal = (line) ->
-		return if not file
 		current.changes.push {
 			type: 'normal'
 			normal: true
-			ln1: ln_del++ unless line is noeol
-			ln2: ln_add++ unless line is noeol
+			ln1: ln_del++
+			ln2: ln_add++
 			content: line
+		}
+
+	eof = (line) ->
+		[..., recentChange] = current.changes
+
+		current.changes.push {
+		  type: recentChange.type
+		  "#{recentChange.type}": true
+		  ln1: recentChange.ln1
+		  ln2: recentChange.ln2
+		  ln: recentChange.ln
+		  content: line
 		}
 
 	schema = [
 		# todo beter regexp to avoid detect normal line starting with diff
-		[/^\s+/, normal]
+		[/^\s+/, normal],
 		[/^diff\s/, start],
 		[/^new file mode \d+$/, new_file],
 		[/^deleted file mode \d+$/, deleted_file],
@@ -94,7 +104,8 @@ module.exports = (input) ->
 		[/^\+\+\+\s/, to_file],
 		[/^@@\s+\-(\d+),?(\d+)?\s+\+(\d+),?(\d+)?\s@@/, chunk],
 		[/^-/, del],
-		[/^\+/, add]
+		[/^\+/, add],
+		[/^\\ No newline at end of file$/, eof]
 	]
 
 	parse = (line) ->

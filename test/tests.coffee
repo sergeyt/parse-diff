@@ -148,6 +148,30 @@ index 123..456 789
 		expect(file.chunks[0].changes[0].content).to.be('- line1')
 		expect(file.chunks[0].changes[1].content).to.be('+ line2')
 
+	it 'should parse diff with EOF flag', ->
+		diff = """
+diff --git a/file1 b/file1
+index 123..456 789
+--- a/file1
++++ b/file1
+@@ -1,2 +1,2 @@
+- line1
++ line2
+\\ No newline at end of file
+"""
+		files = parse diff
+		expect(files.length).to.be(1)
+		file = files[0]
+		expect(file.from).to.be('file1')
+		expect(file.to).to.be('file1')
+		chunk = file.chunks[0]
+		expect(chunk.content).to.be('@@ -1,2 +1,2 @@')
+		expect(chunk.changes.length).to.be(3)
+		expect(chunk.changes[0].content).to.be('- line1')
+		expect(chunk.changes[1].content).to.be('+ line2')
+		expect(chunk.changes[2].type).to.be('add')
+		expect(chunk.changes[2].content).to.be('\\ No newline at end of file')
+
 	it 'should parse gnu sample diff', ->
 		diff = """
 --- lao	2002-02-21 23:30:39.942229878 -0800
