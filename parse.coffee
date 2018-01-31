@@ -85,12 +85,12 @@ module.exports = (input) ->
 		[..., recentChange] = current.changes
 
 		current.changes.push {
-		  type: recentChange.type
-		  "#{recentChange.type}": true
-		  ln1: recentChange.ln1
-		  ln2: recentChange.ln2
-		  ln: recentChange.ln
-		  content: line
+			type: recentChange.type
+			"#{recentChange.type}": true
+			ln1: recentChange.ln1
+			ln2: recentChange.ln2
+			ln: recentChange.ln
+			content: line
 		}
 
 	schema = [
