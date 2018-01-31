@@ -1,3 +1,5 @@
+// parses unified diff
+// http://www.gnu.org/software/diffutils/manual/diffutils.html#Unified-Format
 var defaultToWhiteSpace, escapeRegExp, ltrim, makeString, parseFile, parseFileFallback, trimLeft;
 
 module.exports = function(input) {
@@ -40,7 +42,7 @@ module.exports = function(input) {
   };
   new_file = function() {
     restart();
-    file["new"] = true;
+    file.new = true;
     return file.from = '/dev/null';
   };
   deleted_file = function() {
@@ -69,10 +71,10 @@ module.exports = function(input) {
     current = {
       content: line,
       changes: [],
-      oldStart: oldStart,
-      oldLines: oldLines,
-      newStart: newStart,
-      newLines: newLines
+      oldStart,
+      oldLines,
+      newStart,
+      newLines
     };
     return file.chunks.push(current);
   };
@@ -104,20 +106,18 @@ module.exports = function(input) {
     });
   };
   eof = function(line) {
-    var obj, recentChange, ref;
+    var recentChange, ref;
     ref = current.changes, recentChange = ref[ref.length - 1];
-    return current.changes.push((
-      obj = {
-        type: recentChange.type
-      },
-      obj["" + recentChange.type] = true,
-      obj.ln1 = recentChange.ln1,
-      obj.ln2 = recentChange.ln2,
-      obj.ln = recentChange.ln,
-      obj.content = line,
-      obj
-    ));
+    return current.changes.push({
+      type: recentChange.type,
+      [`${recentChange.type}`]: true,
+      ln1: recentChange.ln1,
+      ln2: recentChange.ln2,
+      ln: recentChange.ln,
+      content: line
+    });
   };
+  // todo beter regexp to avoid detect normal line starting with diff
   schema = [[/^\s+/, normal], [/^diff\s/, start], [/^new file mode \d+$/, new_file], [/^deleted file mode \d+$/, deleted_file], [/^index\s[\da-zA-Z]+\.\.[\da-zA-Z]+(\s(\d+))?$/, index], [/^---\s/, from_file], [/^\+\+\+\s/, to_file], [/^@@\s+\-(\d+),?(\d+)?\s+\+(\d+),?(\d+)?\s@@/, chunk], [/^-/, del], [/^\+/, add], [/^\\ No newline at end of file$/, eof]];
   parse = function(line) {
     var j, len, m, p;
@@ -150,15 +150,18 @@ parseFile = function(s) {
   return fileNames;
 };
 
+// fallback function to overwrite file.from and file.to if executed
 parseFileFallback = function(s) {
   var t;
   s = ltrim(s, '-');
   s = ltrim(s, '+');
   s = s.trim();
+  // ignore possible time stamp
   t = /\t.*|\d{4}-\d\d-\d\d\s\d\d:\d\d:\d\d(.\d+)?\s(\+|-)\d\d\d\d/.exec(s);
   if (t) {
     s = s.substring(0, t.index).trim();
   }
+  // ignore git prefixes a/ or b/
   if (s.match(/^(a|b)\//)) {
     return s.substr(2);
   } else {
