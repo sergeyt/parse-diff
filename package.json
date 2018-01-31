@@ -25,15 +25,15 @@
     "just-boris <just-boris@yandex-team.ru>"
   ],
   "devDependencies": {
-    "coffee-script": "^1.12.4",
-    "coffeelint": "^1.16.0",
+    "coffeelint": "^2.0.7",
+    "coffeescript": "^2.1.1",
     "expect.js": "^0.3.1",
     "grunt": "^1.0.1",
     "grunt-auto-release": "^0.0.7",
     "grunt-bump": "^0.8.0",
     "grunt-cli": "^1.2.0",
     "grunt-coffeelint": "^0.0.16",
-    "grunt-contrib-coffee": "^1.0.0",
+    "grunt-contrib-coffee": "^2.0.0",
     "grunt-contrib-jshint": "^1.1.0",
     "grunt-npm": "^0.0.2",
     "grunt-simple-mocha": "^0.4.1"
