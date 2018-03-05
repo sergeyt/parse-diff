@@ -79,6 +79,9 @@ module.exports = function(input) {
     return file.chunks.push(current);
   };
   del = function(line) {
+    if (!current) {
+      return;
+    }
     current.changes.push({
       type: 'del',
       del: true,
@@ -88,6 +91,9 @@ module.exports = function(input) {
     return file.deletions++;
   };
   add = function(line) {
+    if (!current) {
+      return;
+    }
     current.changes.push({
       type: 'add',
       add: true,
@@ -97,6 +103,9 @@ module.exports = function(input) {
     return file.additions++;
   };
   normal = function(line) {
+    if (!current) {
+      return;
+    }
     return current.changes.push({
       type: 'normal',
       normal: true,

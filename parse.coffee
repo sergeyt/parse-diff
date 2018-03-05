@@ -65,14 +65,17 @@ module.exports = (input) ->
 		file.chunks.push current
 
 	del = (line) ->
+		return unless current
 		current.changes.push {type:'del', del:true, ln:ln_del++, content:line}
 		file.deletions++
 
 	add = (line) ->
+		return unless current
 		current.changes.push {type:'add', add:true, ln:ln_add++, content:line}
 		file.additions++
 
 	normal = (line) ->
+		return unless current
 		current.changes.push {
 			type: 'normal'
 			normal: true
