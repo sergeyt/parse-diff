@@ -1,6 +1,7 @@
-// parses unified diff
-// http://www.gnu.org/software/diffutils/manual/diffutils.html#Unified-Format
-var defaultToWhiteSpace, escapeRegExp, ltrim, makeString, parseFile, parseFileFallback, trimLeft;
+  // parses unified diff
+  // http://www.gnu.org/software/diffutils/manual/diffutils.html#Unified-Format
+var defaultToWhiteSpace, escapeRegExp, ltrim, makeString, parseFile, parseFileFallback, trimLeft,
+  slice = [].slice;
 
 module.exports = function(input) {
   var add, chunk, current, del, deleted_file, eof, file, files, from_file, index, j, len, line, lines, ln_add, ln_del, new_file, normal, parse, restart, schema, start, to_file;
@@ -116,7 +117,7 @@ module.exports = function(input) {
   };
   eof = function(line) {
     var recentChange, ref;
-    ref = current.changes, recentChange = ref[ref.length - 1];
+    ref = current.changes, [recentChange] = slice.call(ref, -1);
     return current.changes.push({
       type: recentChange.type,
       [`${recentChange.type}`]: true,
