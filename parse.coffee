@@ -127,7 +127,7 @@ module.exports = (input) ->
 parseFile = (s) ->
 	return if not s
 
-	fileNames = s.split(' ').slice(-2)
+	fileNames = s.match(/a\/.*(?= b)|b\/.*$/g)
 	fileNames.map (fileName, i) ->
 		fileNames[i] = fileName.replace(/^(a|b)\//, '')
 

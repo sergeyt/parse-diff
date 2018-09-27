@@ -287,3 +287,22 @@ index e6a2e28..0000000
 		file = files[0]
 		expect(file.from).to.be('deletedFile.txt')
 		expect(file.to).to.be('/dev/null')
+
+	it 'should parse rename diff with space in path with no changes', ->
+		diff = """
+diff --git a/My Folder/File b/My Folder/a/File
+similarity index 100%
+rename from a/My Folder/File
+rename to My Folder/a/File
+"""
+
+	it 'should parse rename diff with space in path with changes', ->
+		diff = """
+diff --git a/My Folder/File b/My Folder/a/File
+similarity index 100%
+rename from a/My Folder/File
+rename to My Folder/a/File
+@@ -1,2 +1,2 @@
+- line1
++ line2
+"""
