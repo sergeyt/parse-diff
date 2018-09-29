@@ -15,29 +15,15 @@
     "unidiff",
     "parser"
   ],
-  "contributors": [
-    "Sergey Todyshev <stodyshev@gmail.com>",
-    "Quest <quest@windwards.net>",
-    "Scott Christopherson <scott@scott-christopherson.com>",
-    "Steven Thompson <steven.thompson@aequilibrium.ca>",
-    "DAB0mB <emanor6@gmail.com>",
-    "Lorens Leon <lorensleon@gmail.com>",
-    "Quest <quest@lysator.liu.se>",
-    "Sung Won Cho <mikeswcho@gmail.com>",
-    "just-boris <just-boris@yandex-team.ru>"
-  ],
   "devDependencies": {
     "coffeelint": "^2.1.0",
     "coffeescript": "^2.3.2",
     "expect.js": "^0.3.1",
     "grunt": "^1.0.3",
-    "grunt-auto-release": "^0.0.7",
-    "grunt-bump": "^0.8.0",
     "grunt-cli": "^1.3.1",
     "grunt-coffeelint": "^0.0.16",
     "grunt-contrib-coffee": "^2.0.0",
     "grunt-contrib-jshint": "^2.0.0",
-    "grunt-npm": "^0.0.2",
     "grunt-simple-mocha": "^0.4.1"
   },
   "scripts": {
