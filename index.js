@@ -152,7 +152,7 @@ parseFile = function(s) {
   if (!s) {
     return;
   }
-  fileNames = s.split(' ').slice(-2);
+  fileNames = s.match(/a\/.*(?= b)|b\/.*$/g);
   fileNames.map(function(fileName, i) {
     return fileNames[i] = fileName.replace(/^(a|b)\//, '');
   });

@@ -29,7 +29,7 @@
     "coffeelint": "^2.0.7",
     "coffeescript": "^2.1.1",
     "expect.js": "^0.3.1",
-    "grunt": "^1.0.1",
+    "grunt": "^1.0.3",
     "grunt-auto-release": "^0.0.7",
     "grunt-bump": "^0.8.0",
     "grunt-cli": "^1.2.0",
