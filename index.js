@@ -66,7 +66,7 @@ module.exports = function(input) {
   chunk = function(line, match) {
     var newLines, newStart, oldLines, oldStart;
     ln_del = oldStart = +match[1];
-    oldLines = +(match[2] || 0);
+    oldLines = +(match[2] || 1);
     ln_add = newStart = +match[3];
     newLines = +(match[4] || 0);
     current = {
