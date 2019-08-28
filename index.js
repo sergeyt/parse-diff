@@ -68,7 +68,7 @@ module.exports = function(input) {
     ln_del = oldStart = +match[1];
     oldLines = +(match[2] || 0);
     ln_add = newStart = +match[3];
-    newLines = +(match[4] || 0);
+    newLines = +(match[4] || 1);
     current = {
       content: line,
       changes: [],
