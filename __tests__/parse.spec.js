@@ -114,7 +114,10 @@ index 0000000..db81be4
     expect(file.from).toBe("/dev/null");
     expect(file.to).toBe("file2");
     expect(file.chunks[0].content).toBe("@@ -0,0 +1 @@");
-    expect(file.chunks[0].newLines).toBe(0);
+    expect(file.chunks[0].oldStart).toBe(0);
+    expect(file.chunks[0].oldLines).toBe(0);
+    expect(file.chunks[0].newStart).toBe(1);
+    expect(file.chunks[0].newLines).toBe(1);
     expect(file.chunks[0].changes.length).toBe(1);
     expect(file.chunks[0].changes[0].content).toBe("+line1");
     expect(file.chunks[0].changes[0].type).toBe("add");
