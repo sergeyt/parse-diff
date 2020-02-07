@@ -17,8 +17,8 @@
   ],
   "devDependencies": {
     "coffeelint": "^2.1.0",
-    "coffeescript": "^2.4.1",
-    "jest": "^24.9.0"
+    "coffeescript": "^2.5.1",
+    "jest": "^25.1.0"
   },
   "scripts": {
     "lint": "coffeelint *.coffee",
