@@ -36,6 +36,21 @@ index 123..456 789
     expect(chunk.changes[1].content).toBe("+ line2");
   });
 
+  it("should parse simple git-like diff with file enclosed by double-quote", function() {
+    const diff = `\
+diff --git "a/file1" "b/file2"
+similarity index 100%
+rename from "file1"
+rename to "file2"\
+`;
+    const files = parse(diff);
+    expect(files.length).toBe(1);
+    const file = files[0];
+    expect(file.from).toBe("file1");
+    expect(file.to).toBe("file2");
+    expect(file.chunks.length).toBe(0);
+  });
+
   it("should parse diff with new file mode line", function() {
     const diff = `\
 diff --git a/test b/test
