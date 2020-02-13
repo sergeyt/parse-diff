@@ -51,6 +51,19 @@ rename to "file2"\
     expect(file.chunks.length).toBe(0);
   });
 
+  it('should parse file names for changed binaries with spaces in their names', function() {
+    const diff = `\
+diff --git a/Artsy_Tests/ReferenceImages/ARTopMenuViewControllerSpec/selects 'home' by default as ipad@2x.png b/Artsy_Tests/ReferenceImages/ARTopMenuViewControllerSpec/selects 'home' by default as ipad@2x.png
+index fc72ba34b..ec373e9a4 100644
+Binary files a/Artsy_Tests/ReferenceImages/ARTopMenuViewControllerSpec/selects 'home' by default as ipad@2x.png and b/Artsy_Tests/ReferenceImages/ARTopMenuViewControllerSpec/selects 'home' by default as ipad@2x.png differ\
+`;
+    const files = parse(diff);
+    expect(files.length).toBe(1)
+    const file = files[0]
+    expect(file.from).toBe("Artsy_Tests/ReferenceImages/ARTopMenuViewControllerSpec/selects 'home' by default as ipad@2x.png")
+    expect(file.to).toBe("Artsy_Tests/ReferenceImages/ARTopMenuViewControllerSpec/selects 'home' by default as ipad@2x.png")
+  });
+
   it("should parse diff with new file mode line", function() {
     const diff = `\
 diff --git a/test b/test
