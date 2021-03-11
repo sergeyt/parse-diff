@@ -105,10 +105,12 @@ module.exports = input => {
       ln: addedLineCounter++,
       content: line
     })
-    currentFile.deletions++
+    currentFile.additions++
   }
 
   const eof = line => {
+    if (!currentChunk) return
+
     const [mostRecentChange] = currentChunk.changes.slice(-1)
 
     currentChunk.changes.push({
