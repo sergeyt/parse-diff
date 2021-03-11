@@ -5,8 +5,23 @@
     "es2021": true,
     "node": true
   },
-  "extends": "eslint:recommended",
+  "extends": ["eslint:recommended", "plugin:prettier/recommended"],
+  "plugins": ["prettier"],
   "parserOptions": {
     "ecmaVersion": 12
+  },
+  "rules": {
+    "prettier/prettier": [
+      "error",
+      {
+        "tabWidth": 2,
+        "singleQuote": true,
+        "semi": false,
+        "useTabs": false,
+        "arrowParens": "avoid",
+        "endOfLine": "auto",
+        "trailingComma": "none"
+      }
+    ]
   }
 }
