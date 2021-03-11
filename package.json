@@ -16,13 +16,15 @@
     "parser"
   ],
   "devDependencies": {
-    "coffeelint": "^2.1.0",
-    "coffeescript": "^2.5.1",
-    "jest": "^26.4.2"
+    "@babel/cli": "^7.13.10",
+    "@babel/core": "^7.13.10",
+    "@babel/preset-env": "^7.13.10",
+    "eslint": "^7.21.0",
+    "jest": "^26.6.3"
   },
   "scripts": {
-    "lint": "coffeelint *.coffee",
-    "build": "coffee -b -o index.js parse.coffee",
+    "lint": "eslint parse.js",
+    "build": "babel -o index.js --minified parse.js",
     "test": "jest"
   }
 }
