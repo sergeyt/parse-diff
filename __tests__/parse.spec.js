@@ -375,4 +375,21 @@ rename to My Folder/a/File
     expect(chunk.changes[0].content).toBe("- line1");
     expect(chunk.changes[1].content).toBe("+ line2");
   });
+
+  it("should parse diff with single line quote escaped file names", function () {
+    const diff = `
+diff --git "a/file \\"space\\"" "b/file \\"space\\""
+index 9daeafb..88bd214 100644
+--- "a/file \\"space\\""  
++++ "b/file \\"space\\""  
+@@ -1 +1 @@
+-test
++test\n1234
+`;
+    const files = parse(diff);
+    expect(files.length).toBe(1);
+    const [file] = files;
+    expect(file.from).toBe(`file \\"space\\"`);
+    expect(file.to).toBe(`file \\"space\\"`);
+  });
 });
