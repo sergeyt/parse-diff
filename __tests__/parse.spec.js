@@ -1,19 +1,19 @@
-const parse = require('../index')
+const parse = require("../index");
 
-describe('diff parser', function () {
-  it('should parse null', () => {
-    expect(parse(null).length).toBe(0)
-  })
+describe("diff parser", function () {
+  it("should parse null", () => {
+    expect(parse(null).length).toBe(0);
+  });
 
-  it('should parse empty string', () => {
-    expect(parse('').length).toBe(0)
-  })
+  it("should parse empty string", () => {
+    expect(parse("").length).toBe(0);
+  });
 
-  it('should parse whitespace', () => {
-    expect(parse(' ').length).toBe(0)
-  })
+  it("should parse whitespace", () => {
+    expect(parse(" ").length).toBe(0);
+  });
 
-  it('should parse simple git-like diff', function () {
+  it("should parse simple git-like diff", function () {
     const diff = `\
 diff --git a/file b/file
 index 123..456 789
@@ -22,55 +22,55 @@ index 123..456 789
 @@ -1,2 +1,2 @@
 - line1
 + line2\
-`
-    const files = parse(diff)
-    expect(files.length).toBe(1)
-    const file = files[0]
-    expect(file.from).toBe('file')
-    expect(file.to).toBe('file')
-    expect(file.deletions).toBe(1)
-    expect(file.additions).toBe(1)
-    expect(file.chunks.length).toBe(1)
-    const chunk = file.chunks[0]
-    expect(chunk.content).toBe('@@ -1,2 +1,2 @@')
-    expect(chunk.changes.length).toBe(2)
-    expect(chunk.changes[0].content).toBe('- line1')
-    expect(chunk.changes[1].content).toBe('+ line2')
-  })
+`;
+    const files = parse(diff);
+    expect(files.length).toBe(1);
+    const file = files[0];
+    expect(file.from).toBe("file");
+    expect(file.to).toBe("file");
+    expect(file.deletions).toBe(1);
+    expect(file.additions).toBe(1);
+    expect(file.chunks.length).toBe(1);
+    const chunk = file.chunks[0];
+    expect(chunk.content).toBe("@@ -1,2 +1,2 @@");
+    expect(chunk.changes.length).toBe(2);
+    expect(chunk.changes[0].content).toBe("- line1");
+    expect(chunk.changes[1].content).toBe("+ line2");
+  });
 
-  it('should parse simple git-like diff with file enclosed by double-quote', function () {
+  it("should parse simple git-like diff with file enclosed by double-quote", function () {
     const diff = `\
 diff --git "a/file1" "b/file2"
 similarity index 100%
 rename from "file1"
 rename to "file2"\
-`
-    const files = parse(diff)
-    expect(files.length).toBe(1)
-    const file = files[0]
-    expect(file.from).toBe('file1')
-    expect(file.to).toBe('file2')
-    expect(file.chunks.length).toBe(0)
-  })
+`;
+    const files = parse(diff);
+    expect(files.length).toBe(1);
+    const file = files[0];
+    expect(file.from).toBe("file1");
+    expect(file.to).toBe("file2");
+    expect(file.chunks.length).toBe(0);
+  });
 
-  it('should parse file names for changed binaries with spaces in their names', function () {
+  it("should parse file names for changed binaries with spaces in their names", function () {
     const diff = `\
 diff --git a/Artsy_Tests/ReferenceImages/ARTopMenuViewControllerSpec/selects 'home' by default as ipad@2x.png b/Artsy_Tests/ReferenceImages/ARTopMenuViewControllerSpec/selects 'home' by default as ipad@2x.png
 index fc72ba34b..ec373e9a4 100644
 Binary files a/Artsy_Tests/ReferenceImages/ARTopMenuViewControllerSpec/selects 'home' by default as ipad@2x.png and b/Artsy_Tests/ReferenceImages/ARTopMenuViewControllerSpec/selects 'home' by default as ipad@2x.png differ\
-`
-    const files = parse(diff)
-    expect(files.length).toBe(1)
-    const file = files[0]
+`;
+    const files = parse(diff);
+    expect(files.length).toBe(1);
+    const file = files[0];
     expect(file.from).toBe(
       "Artsy_Tests/ReferenceImages/ARTopMenuViewControllerSpec/selects 'home' by default as ipad@2x.png"
-    )
+    );
     expect(file.to).toBe(
       "Artsy_Tests/ReferenceImages/ARTopMenuViewControllerSpec/selects 'home' by default as ipad@2x.png"
-    )
-  })
+    );
+  });
 
-  it('should parse diff with new file mode line', function () {
+  it("should parse diff with new file mode line", function () {
     const diff = `\
 diff --git a/test b/test
 new file mode 100644
@@ -80,20 +80,20 @@ index 0000000..db81be4
 @@ -0,0 +1,2 @@
 +line1
 +line2\
-`
-    const files = parse(diff)
-    expect(files.length).toBe(1)
-    const file = files[0]
-    expect(file.new).toBeTruthy()
-    expect(file.from).toBe('/dev/null')
-    expect(file.to).toBe('test')
-    expect(file.chunks[0].content).toBe('@@ -0,0 +1,2 @@')
-    expect(file.chunks[0].changes.length).toBe(2)
-    expect(file.chunks[0].changes[0].content).toBe('+line1')
-    expect(file.chunks[0].changes[1].content).toBe('+line2')
-  })
+`;
+    const files = parse(diff);
+    expect(files.length).toBe(1);
+    const file = files[0];
+    expect(file.new).toBeTruthy();
+    expect(file.from).toBe("/dev/null");
+    expect(file.to).toBe("test");
+    expect(file.chunks[0].content).toBe("@@ -0,0 +1,2 @@");
+    expect(file.chunks[0].changes.length).toBe(2);
+    expect(file.chunks[0].changes[0].content).toBe("+line1");
+    expect(file.chunks[0].changes[1].content).toBe("+line2");
+  });
 
-  it('should parse diff with deleted file mode line', function () {
+  it("should parse diff with deleted file mode line", function () {
     const diff = `\
 diff --git a/test b/test
 deleted file mode 100644
@@ -103,20 +103,20 @@ index db81be4..0000000
 @@ -1,2 +0,0 @@
 -line1
 -line2\
-`
-    const files = parse(diff)
-    expect(files.length).toBe(1)
-    const file = files[0]
-    expect(file.deleted).toBeTruthy()
-    expect(file.from).toBe('test')
-    expect(file.to).toBe('/dev/null')
-    expect(file.chunks[0].content).toBe('@@ -1,2 +0,0 @@')
-    expect(file.chunks[0].changes.length).toBe(2)
-    expect(file.chunks[0].changes[0].content).toBe('-line1')
-    expect(file.chunks[0].changes[1].content).toBe('-line2')
-  })
+`;
+    const files = parse(diff);
+    expect(files.length).toBe(1);
+    const file = files[0];
+    expect(file.deleted).toBeTruthy();
+    expect(file.from).toBe("test");
+    expect(file.to).toBe("/dev/null");
+    expect(file.chunks[0].content).toBe("@@ -1,2 +0,0 @@");
+    expect(file.chunks[0].changes.length).toBe(2);
+    expect(file.chunks[0].changes[0].content).toBe("-line1");
+    expect(file.chunks[0].changes[1].content).toBe("-line2");
+  });
 
-  it('should parse diff with single line files', function () {
+  it("should parse diff with single line files", function () {
     const diff = `\
 diff --git a/file1 b/file1
 deleted file mode 100644
@@ -132,32 +132,32 @@ index 0000000..db81be4
 +++ b/file2
 @@ -0,0 +1 @@
 +line1\
-`
-    const files = parse(diff)
-    expect(files.length).toBe(2)
-    let file = files[0]
-    expect(file.deleted).toBeTruthy()
-    expect(file.from).toBe('file1')
-    expect(file.to).toBe('/dev/null')
-    expect(file.chunks[0].content).toBe('@@ -1 +0,0 @@')
-    expect(file.chunks[0].changes.length).toBe(1)
-    expect(file.chunks[0].changes[0].content).toBe('-line1')
-    expect(file.chunks[0].changes[0].type).toBe('del')
-    file = files[1]
-    expect(file.new).toBeTruthy()
-    expect(file.from).toBe('/dev/null')
-    expect(file.to).toBe('file2')
-    expect(file.chunks[0].content).toBe('@@ -0,0 +1 @@')
-    expect(file.chunks[0].oldStart).toBe(0)
-    expect(file.chunks[0].oldLines).toBe(0)
-    expect(file.chunks[0].newStart).toBe(1)
-    expect(file.chunks[0].newLines).toBe(1)
-    expect(file.chunks[0].changes.length).toBe(1)
-    expect(file.chunks[0].changes[0].content).toBe('+line1')
-    expect(file.chunks[0].changes[0].type).toBe('add')
-  })
+`;
+    const files = parse(diff);
+    expect(files.length).toBe(2);
+    let file = files[0];
+    expect(file.deleted).toBeTruthy();
+    expect(file.from).toBe("file1");
+    expect(file.to).toBe("/dev/null");
+    expect(file.chunks[0].content).toBe("@@ -1 +0,0 @@");
+    expect(file.chunks[0].changes.length).toBe(1);
+    expect(file.chunks[0].changes[0].content).toBe("-line1");
+    expect(file.chunks[0].changes[0].type).toBe("del");
+    file = files[1];
+    expect(file.new).toBeTruthy();
+    expect(file.from).toBe("/dev/null");
+    expect(file.to).toBe("file2");
+    expect(file.chunks[0].content).toBe("@@ -0,0 +1 @@");
+    expect(file.chunks[0].oldStart).toBe(0);
+    expect(file.chunks[0].oldLines).toBe(0);
+    expect(file.chunks[0].newStart).toBe(1);
+    expect(file.chunks[0].newLines).toBe(1);
+    expect(file.chunks[0].changes.length).toBe(1);
+    expect(file.chunks[0].changes[0].content).toBe("+line1");
+    expect(file.chunks[0].changes[0].type).toBe("add");
+  });
 
-  it('should parse multiple files in diff', function () {
+  it("should parse multiple files in diff", function () {
     const diff = `\
 diff --git a/file1 b/file1
 index 123..456 789
@@ -173,26 +173,26 @@ index 123..456 789
 @@ -1,3 +1,3 @@
 - line1
 + line2\
-`
-    const files = parse(diff)
-    expect(files.length).toBe(2)
-    let file = files[0]
-    expect(file.from).toBe('file1')
-    expect(file.to).toBe('file1')
-    expect(file.chunks[0].content).toBe('@@ -1,2 +1,2 @@')
-    expect(file.chunks[0].changes.length).toBe(2)
-    expect(file.chunks[0].changes[0].content).toBe('- line1')
-    expect(file.chunks[0].changes[1].content).toBe('+ line2')
-    file = files[1]
-    expect(file.from).toBe('file2')
-    expect(file.to).toBe('file2')
-    expect(file.chunks[0].content).toBe('@@ -1,3 +1,3 @@')
-    expect(file.chunks[0].changes.length).toBe(2)
-    expect(file.chunks[0].changes[0].content).toBe('- line1')
-    expect(file.chunks[0].changes[1].content).toBe('+ line2')
-  })
+`;
+    const files = parse(diff);
+    expect(files.length).toBe(2);
+    let file = files[0];
+    expect(file.from).toBe("file1");
+    expect(file.to).toBe("file1");
+    expect(file.chunks[0].content).toBe("@@ -1,2 +1,2 @@");
+    expect(file.chunks[0].changes.length).toBe(2);
+    expect(file.chunks[0].changes[0].content).toBe("- line1");
+    expect(file.chunks[0].changes[1].content).toBe("+ line2");
+    file = files[1];
+    expect(file.from).toBe("file2");
+    expect(file.to).toBe("file2");
+    expect(file.chunks[0].content).toBe("@@ -1,3 +1,3 @@");
+    expect(file.chunks[0].changes.length).toBe(2);
+    expect(file.chunks[0].changes[0].content).toBe("- line1");
+    expect(file.chunks[0].changes[1].content).toBe("+ line2");
+  });
 
-  it('should parse diff with EOF flag', function () {
+  it("should parse diff with EOF flag", function () {
     const diff = `\
 diff --git a/file1 b/file1
 index 123..456 789
@@ -202,22 +202,22 @@ index 123..456 789
 - line1
 + line2
 \\ No newline at end of file\
-`
-    const files = parse(diff)
-    expect(files.length).toBe(1)
-    const file = files[0]
-    expect(file.from).toBe('file1')
-    expect(file.to).toBe('file1')
-    const chunk = file.chunks[0]
-    expect(chunk.content).toBe('@@ -1,2 +1,2 @@')
-    expect(chunk.changes.length).toBe(3)
-    expect(chunk.changes[0].content).toBe('- line1')
-    expect(chunk.changes[1].content).toBe('+ line2')
-    expect(chunk.changes[2].type).toBe('add')
-    expect(chunk.changes[2].content).toBe('\\ No newline at end of file')
-  })
+`;
+    const files = parse(diff);
+    expect(files.length).toBe(1);
+    const file = files[0];
+    expect(file.from).toBe("file1");
+    expect(file.to).toBe("file1");
+    const chunk = file.chunks[0];
+    expect(chunk.content).toBe("@@ -1,2 +1,2 @@");
+    expect(chunk.changes.length).toBe(3);
+    expect(chunk.changes[0].content).toBe("- line1");
+    expect(chunk.changes[1].content).toBe("+ line2");
+    expect(chunk.changes[2].type).toBe("add");
+    expect(chunk.changes[2].content).toBe("\\ No newline at end of file");
+  });
 
-  it('should parse gnu sample diff', function () {
+  it("should parse gnu sample diff", function () {
     const diff = `\
 --- lao	2002-02-21 23:30:39.942229878 -0800
 +++ tzu	2002-02-21 23:30:50.442260588 -0800
@@ -238,26 +238,26 @@ And let there always be being,
 +They both may be called deep and profound.
 +Deeper and more profound,
 +The door of all subtleties!\
-`
-    const files = parse(diff)
-    expect(files.length).toBe(1)
-    const file = files[0]
-    expect(file.from).toBe('lao')
-    expect(file.to).toBe('tzu')
-    expect(file.chunks.length).toBe(2)
-    const chunk0 = file.chunks[0]
-    expect(chunk0.oldStart).toBe(1)
-    expect(chunk0.oldLines).toBe(7)
-    expect(chunk0.newStart).toBe(1)
-    expect(chunk0.newLines).toBe(6)
-    const chunk1 = file.chunks[1]
-    expect(chunk1.oldStart).toBe(9)
-    expect(chunk1.oldLines).toBe(3)
-    expect(chunk1.newStart).toBe(8)
-    expect(chunk1.newLines).toBe(6)
-  })
+`;
+    const files = parse(diff);
+    expect(files.length).toBe(1);
+    const file = files[0];
+    expect(file.from).toBe("lao");
+    expect(file.to).toBe("tzu");
+    expect(file.chunks.length).toBe(2);
+    const chunk0 = file.chunks[0];
+    expect(chunk0.oldStart).toBe(1);
+    expect(chunk0.oldLines).toBe(7);
+    expect(chunk0.newStart).toBe(1);
+    expect(chunk0.newLines).toBe(6);
+    const chunk1 = file.chunks[1];
+    expect(chunk1.oldStart).toBe(9);
+    expect(chunk1.oldLines).toBe(3);
+    expect(chunk1.newStart).toBe(8);
+    expect(chunk1.newLines).toBe(6);
+  });
 
-  it('should parse hg diff output', function () {
+  it("should parse hg diff output", function () {
     const diff = `\
 diff -r 514fc757521e lib/parsers.coffee
 --- a/lib/parsers.coffee	Thu Jul 09 00:56:36 2015 +0200
@@ -272,16 +272,16 @@ diff -r 514fc757521e lib/parsers.coffee
  module.exports = Parsers
 
  module.exports.version = (out) ->\
-`
-    const files = parse(diff)
-    expect(files.length).toBe(1)
-    const file = files[0]
-    expect(file.chunks[0].content).toBe('@@ -43,6 +43,9 @@')
-    expect(file.from).toBe('lib/parsers.coffee')
-    expect(file.to).toBe('lib/parsers.coffee')
-  })
+`;
+    const files = parse(diff);
+    expect(files.length).toBe(1);
+    const file = files[0];
+    expect(file.chunks[0].content).toBe("@@ -43,6 +43,9 @@");
+    expect(file.from).toBe("lib/parsers.coffee");
+    expect(file.to).toBe("lib/parsers.coffee");
+  });
 
-  it('should parse svn diff output', function () {
+  it("should parse svn diff output", function () {
     const diff = `\
 Index: new.txt
 ===================================================================
@@ -303,57 +303,57 @@ Index: text.txt
  be shown if it doesn't
  change.  Otherwise, that
  would not be helping to\
-`
-    const files = parse(diff)
-    expect(files.length).toBe(2)
-    const file = files[0]
-    expect(file.from).toBe('new.txt')
-    expect(file.to).toBe('new.txt')
-    expect(file.chunks[0].changes.length).toBe(1)
-  })
+`;
+    const files = parse(diff);
+    expect(files.length).toBe(2);
+    const file = files[0];
+    expect(file.from).toBe("new.txt");
+    expect(file.to).toBe("new.txt");
+    expect(file.chunks[0].changes.length).toBe(1);
+  });
 
-  it('should parse file names for n new empty file', function () {
+  it("should parse file names for n new empty file", function () {
     const diff = `\
 diff --git a/newFile.txt b/newFile.txt
 new file mode 100644
 index 0000000..e6a2e28\
-`
-    const files = parse(diff)
-    expect(files.length).toBe(1)
-    const file = files[0]
-    expect(file.from).toBe('/dev/null')
-    expect(file.to).toBe('newFile.txt')
-  })
+`;
+    const files = parse(diff);
+    expect(files.length).toBe(1);
+    const file = files[0];
+    expect(file.from).toBe("/dev/null");
+    expect(file.to).toBe("newFile.txt");
+  });
 
-  it('should parse file names for a deleted file', function () {
+  it("should parse file names for a deleted file", function () {
     const diff = `\
 diff --git a/deletedFile.txt b/deletedFile.txt
 deleted file mode 100644
 index e6a2e28..0000000\
-`
-    const files = parse(diff)
-    expect(files.length).toBe(1)
-    const file = files[0]
-    expect(file.from).toBe('deletedFile.txt')
-    expect(file.to).toBe('/dev/null')
-  })
+`;
+    const files = parse(diff);
+    expect(files.length).toBe(1);
+    const file = files[0];
+    expect(file.from).toBe("deletedFile.txt");
+    expect(file.to).toBe("/dev/null");
+  });
 
-  it('should parse rename diff with space in path with no changes', function () {
+  it("should parse rename diff with space in path with no changes", function () {
     const diff = `\
 diff --git a/My Folder/File b/My Folder/a/File
 similarity index 100%
 rename from a/My Folder/File
 rename to My Folder/a/File\
-`
-    const files = parse(diff)
-    expect(files.length).toBe(1)
-    const file = files[0]
-    expect(file.from).toBe('My Folder/File')
-    expect(file.to).toBe('My Folder/a/File')
-    expect(file.chunks.length).toBe(0)
-  })
+`;
+    const files = parse(diff);
+    expect(files.length).toBe(1);
+    const file = files[0];
+    expect(file.from).toBe("My Folder/File");
+    expect(file.to).toBe("My Folder/a/File");
+    expect(file.chunks.length).toBe(0);
+  });
 
-  it('should parse rename diff with space in path with changes', function () {
+  it("should parse rename diff with space in path with changes", function () {
     const diff = `\
 diff --git a/My Folder/File b/My Folder/a/File
 similarity index 100%
@@ -362,17 +362,17 @@ rename to My Folder/a/File
 @@ -1,2 +1,2 @@
 - line1
 + line2\
-`
-    const files = parse(diff)
-    expect(files.length).toBe(1)
-    const file = files[0]
-    expect(file.from).toBe('My Folder/File')
-    expect(file.to).toBe('My Folder/a/File')
-    expect(file.chunks.length).toBe(1)
-    const chunk = file.chunks[0]
-    expect(chunk.content).toBe('@@ -1,2 +1,2 @@')
-    expect(chunk.changes.length).toBe(2)
-    expect(chunk.changes[0].content).toBe('- line1')
-    expect(chunk.changes[1].content).toBe('+ line2')
-  })
-})
+`;
+    const files = parse(diff);
+    expect(files.length).toBe(1);
+    const file = files[0];
+    expect(file.from).toBe("My Folder/File");
+    expect(file.to).toBe("My Folder/a/File");
+    expect(file.chunks.length).toBe(1);
+    const chunk = file.chunks[0];
+    expect(chunk.content).toBe("@@ -1,2 +1,2 @@");
+    expect(chunk.changes.length).toBe(2);
+    expect(chunk.changes[0].content).toBe("- line1");
+    expect(chunk.changes[1].content).toBe("+ line2");
+  });
+});
