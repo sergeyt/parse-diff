@@ -26,8 +26,8 @@
     "prettier": "^2.2.1"
   },
   "scripts": {
-    "format": "eslint --fix parse.js",
-    "lint": "eslint parse.js",
+    "format": "eslint --fix parse.js __tests__/*.js",
+    "lint": "eslint parse.js __tests__/*.js",
     "build": "babel -o index.js --minified parse.js",
     "test": "jest"
   }
