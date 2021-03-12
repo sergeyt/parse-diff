@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/sergeyt/parse-diff.svg?branch=master)](https://travis-ci.org/sergeyt/parse-diff)
+[![Build Status](https://github.com/sergeyt/parse-diff/actions/workflows/ci.yml/badge.svg)](https://github.com/sergeyt/parse-diff/actions/workflows/ci.yml)
 [![Total downloads](https://img.shields.io/npm/dt/parse-diff.svg)](https://www.npmjs.com/package/parse-diff)
 
 [![NPM](https://nodei.co/npm/parse-diff.png?downloads=true&stars=true)](https://nodei.co/npm/parse-diff/)
