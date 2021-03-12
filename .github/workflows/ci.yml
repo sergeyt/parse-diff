@@ -1,4 +1,4 @@
-name: check commits
+name: build
 
 on:
   push:
