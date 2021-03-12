@@ -5,7 +5,7 @@
 
 # parse-diff
 
-Simple unified diff parser for nodejs
+Simple unified diff parser for JavaScript
 
 ## JavaScript Usage Example
 
