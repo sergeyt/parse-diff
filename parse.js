@@ -155,17 +155,21 @@ module.exports = (input) => {
 };
 
 const fileNameDiffRegex = /a\/.*(?=["']? ["']?b\/)|b\/.*$/g;
+const gitFileHeaderRegex = /^(a|b)\//;
 const parseFiles = (line) => {
   let fileNames = line?.match(fileNameDiffRegex);
   return fileNames?.map((fileName) =>
-    fileName.replace(/^(a|b)\//, "").replace(/("|')$/, "")
+    fileName.replace(gitFileHeaderRegex, "").replace(/("|')$/, "")
   );
 };
 
+const qoutedFileNameRegex = /^\\?['"]|\\?['"]$/g;
 const parseOldOrNewFile = (line) => {
   let fileName = leftTrimChars(line, "-+").trim();
   fileName = removeTimeStamp(fileName);
-  return /^(a|b)\//.test(fileName) ? fileName.substr(2) : fileName;
+  return fileName
+    .replace(qoutedFileNameRegex, "")
+    .replace(gitFileHeaderRegex, "");
 };
 
 const leftTrimChars = (string, trimmingChars) => {
