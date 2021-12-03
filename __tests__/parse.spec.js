@@ -392,4 +392,36 @@ index 9daeafb..88bd214 100644
     expect(file.from).toBe(`file \\"space\\"`);
     expect(file.to).toBe(`file \\"space\\"`);
   });
+
+  it("should parse files with additional '-' and '+'", function () {
+    const diff = `\
+diff --git a/file1 b/file1
+index 123..456 789
+--- a/file1
++++ b/file1
+@@ -1,2 +1,1 @@
+- line11
+--- line12
++ line21
+diff --git a/file2 b/file2
+index 123..456 789
+--- a/file2
++++ b/file2
+@@ -1,2 +1,1 @@
+- line11
++++ line21
++ line22\
+`;
+    const files = parse(diff);
+    expect(files.length).toBe(2);
+    const [file1, file2] = files;
+
+    expect(file1.from).toBe(`file1`);
+    expect(file1.to).toBe(`file1`);
+    expect(file1.chunks[0].changes.length).toBe(3);
+
+    expect(file2.from).toBe(`file2`);
+    expect(file2.to).toBe(`file2`);
+    expect(file2.chunks[0].changes.length).toBe(3);
+  });
 });
