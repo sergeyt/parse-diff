@@ -163,14 +163,14 @@ diff --git a/file1 b/file1
 index 123..456 789
 --- a/file1
 +++ b/file1
-@@ -1,2 +1,2 @@
+@@ -1,1 +1,1 @@
 - line1
 + line2
 diff --git a/file2 b/file2
 index 123..456 789
 --- a/file2
 +++ b/file2
-@@ -1,3 +1,3 @@
+@@ -1,1 +1,1 @@
 - line1
 + line2\
 `;
@@ -179,14 +179,14 @@ index 123..456 789
     let file = files[0];
     expect(file.from).toBe("file1");
     expect(file.to).toBe("file1");
-    expect(file.chunks[0].content).toBe("@@ -1,2 +1,2 @@");
+    expect(file.chunks[0].content).toBe("@@ -1,1 +1,1 @@");
     expect(file.chunks[0].changes.length).toBe(2);
     expect(file.chunks[0].changes[0].content).toBe("- line1");
     expect(file.chunks[0].changes[1].content).toBe("+ line2");
     file = files[1];
     expect(file.from).toBe("file2");
     expect(file.to).toBe("file2");
-    expect(file.chunks[0].content).toBe("@@ -1,3 +1,3 @@");
+    expect(file.chunks[0].content).toBe("@@ -1,1 +1,1 @@");
     expect(file.chunks[0].changes.length).toBe(2);
     expect(file.chunks[0].changes[0].content).toBe("- line1");
     expect(file.chunks[0].changes[1].content).toBe("+ line2");
@@ -198,7 +198,7 @@ diff --git a/file1 b/file1
 index 123..456 789
 --- a/file1
 +++ b/file1
-@@ -1,2 +1,2 @@
+@@ -1,1 +1,1 @@
 - line1
 + line2
 \\ No newline at end of file\
@@ -209,7 +209,7 @@ index 123..456 789
     expect(file.from).toBe("file1");
     expect(file.to).toBe("file1");
     const chunk = file.chunks[0];
-    expect(chunk.content).toBe("@@ -1,2 +1,2 @@");
+    expect(chunk.content).toBe("@@ -1,1 +1,1 @@");
     expect(chunk.changes.length).toBe(3);
     expect(chunk.changes[0].content).toBe("- line1");
     expect(chunk.changes[1].content).toBe("+ line2");
@@ -230,7 +230,7 @@ index 123..456 789
 +
  Therefore let there always be non-being,
 	so we may see their subtlety,
-And let there always be being,
+ And let there always be being,
 @@ -9,3 +8,6 @@
  The two are the same,
  But after they are produced,
