@@ -69,6 +69,8 @@ module.exports = (input) => {
     currentFile.to = parseOldOrNewFile(line);
   };
 
+  const toNumOfLines = (number) => +(number || 1);
+
   const chunk = (line, match) => {
     if (!currentFile) return;
 
@@ -80,13 +82,13 @@ module.exports = (input) => {
       content: line,
       changes: [],
       oldStart: +oldStart,
-      oldLines: +(oldNumLines || 1),
+      oldLines: toNumOfLines(oldNumLines),
       newStart: +newStart,
-      newLines: +(newNumLines || 1),
+      newLines: toNumOfLines(newNumLines),
     };
     currentFileChanges = {
-      oldLines: +(oldNumLines || 1),
-      newLines: +(newNumLines || 1),
+      oldLines: toNumOfLines(oldNumLines),
+      newLines: toNumOfLines(newNumLines),
     };
     currentFile.chunks.push(currentChunk);
   };
@@ -149,29 +151,37 @@ module.exports = (input) => {
     [/^\s+/, normal],
   ];
 
+  const parseContentLine = (line) => {
+    for (const [pattern, handler] of schemaContent) {
+      const match = line.match(pattern);
+      if (match) {
+        handler(line, match);
+        break;
+      }
+    }
+    if (
+      currentFileChanges.oldLines === 0 &&
+      currentFileChanges.newLines === 0
+    ) {
+      currentFileChanges = null;
+    }
+  };
+
+  const parseHeaderLine = (line) => {
+    for (const [pattern, handler] of schemaHeaders) {
+      const match = line.match(pattern);
+      if (match) {
+        handler(line, match);
+        break;
+      }
+    }
+  };
+
   const parseLine = (line) => {
     if (currentFileChanges) {
-      for (const [pattern, handler] of schemaContent) {
-        const match = line.match(pattern);
-        if (match) {
-          handler(line, match);
-          break;
-        }
-      }
-      if (
-        currentFileChanges.oldLines === 0 &&
-        currentFileChanges.newLines === 0
-      ) {
-        currentFileChanges = null;
-      }
+      parseContentLine(line);
     } else {
-      for (const [pattern, handler] of schemaHeaders) {
-        const match = line.match(pattern);
-        if (match) {
-          handler(line, match);
-          break;
-        }
-      }
+      parseHeaderLine(line);
     }
     return;
   };
