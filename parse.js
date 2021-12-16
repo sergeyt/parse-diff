@@ -10,6 +10,7 @@ module.exports = (input) => {
   let currentChunk = null;
   let deletedLineCounter = 0;
   let addedLineCounter = 0;
+  let currentFileChanges = null;
 
   const normal = (line) => {
     currentChunk?.changes.push({
@@ -19,6 +20,8 @@ module.exports = (input) => {
       ln2: addedLineCounter++,
       content: line,
     });
+    currentFileChanges.oldLines--;
+    currentFileChanges.newLines--;
   };
 
   const start = (line) => {
@@ -66,6 +69,8 @@ module.exports = (input) => {
     currentFile.to = parseOldOrNewFile(line);
   };
 
+  const toNumOfLines = (number) => +(number || 1);
+
   const chunk = (line, match) => {
     if (!currentFile) return;
 
@@ -77,9 +82,13 @@ module.exports = (input) => {
       content: line,
       changes: [],
       oldStart: +oldStart,
-      oldLines: +(oldNumLines || 1),
+      oldLines: toNumOfLines(oldNumLines),
       newStart: +newStart,
-      newLines: +(newNumLines || 1),
+      newLines: toNumOfLines(newNumLines),
+    };
+    currentFileChanges = {
+      oldLines: toNumOfLines(oldNumLines),
+      newLines: toNumOfLines(newNumLines),
     };
     currentFile.chunks.push(currentChunk);
   };
@@ -94,6 +103,7 @@ module.exports = (input) => {
       content: line,
     });
     currentFile.deletions++;
+    currentFileChanges.oldLines--;
   };
 
   const add = (line) => {
@@ -106,6 +116,7 @@ module.exports = (input) => {
       content: line,
     });
     currentFile.additions++;
+    currentFileChanges.newLines--;
   };
 
   const eof = (line) => {
@@ -123,9 +134,7 @@ module.exports = (input) => {
     });
   };
 
-  const schema = [
-    // TODO: better regexp to avoid detect normal line starting with diff
-    [/^\s+/, normal],
+  const schemaHeaders = [
     [/^diff\s/, start],
     [/^new file mode \d+$/, newFile],
     [/^deleted file mode \d+$/, deletedFile],
@@ -133,20 +142,48 @@ module.exports = (input) => {
     [/^---\s/, fromFile],
     [/^\+\+\+\s/, toFile],
     [/^@@\s+-(\d+),?(\d+)?\s+\+(\d+),?(\d+)?\s@@/, chunk],
-    [/^-/, del],
-    [/^\+/, add],
     [/^\\ No newline at end of file$/, eof],
   ];
 
-  const parseLine = (line) => {
-    for (const [pattern, handler] of schema) {
+  const schemaContent = [
+    [/^-/, del],
+    [/^\+/, add],
+    [/^\s+/, normal],
+  ];
+
+  const parseContentLine = (line) => {
+    for (const [pattern, handler] of schemaContent) {
       const match = line.match(pattern);
       if (match) {
         handler(line, match);
-        return true;
+        break;
       }
     }
-    return false;
+    if (
+      currentFileChanges.oldLines === 0 &&
+      currentFileChanges.newLines === 0
+    ) {
+      currentFileChanges = null;
+    }
+  };
+
+  const parseHeaderLine = (line) => {
+    for (const [pattern, handler] of schemaHeaders) {
+      const match = line.match(pattern);
+      if (match) {
+        handler(line, match);
+        break;
+      }
+    }
+  };
+
+  const parseLine = (line) => {
+    if (currentFileChanges) {
+      parseContentLine(line);
+    } else {
+      parseHeaderLine(line);
+    }
+    return;
   };
 
   for (const line of lines) parseLine(line);
