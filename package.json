@@ -29,6 +29,7 @@
     "lint:fix": "eslint --fix parse.js __tests__/*.js",
     "lint": "eslint parse.js __tests__/*.js",
     "build": "babel -o index.js --minified parse.js",
-    "test": "jest"
+    "test": "jest",
+    "ci": "npm run lint && npm test"
   }
 }

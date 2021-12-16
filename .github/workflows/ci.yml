@@ -24,4 +24,4 @@ jobs:
           node-version: "14.x"
 
       - name: lint and test
-        run: npm install && npm run lint && npm test
+        run: npm install && npm run ci
