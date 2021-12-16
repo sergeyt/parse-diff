@@ -218,7 +218,8 @@ const leftTrimChars = (string, trimmingChars) => {
   return string.replace(new RegExp(`^${trimmingString}+`), "");
 };
 
-const timeStampRegex = /\t.*|\d{4}-\d\d-\d\d\s\d\d:\d\d:\d\d(.\d+)?\s(\+|-)\d\d\d\d/;
+const timeStampRegex =
+  /\t.*|\d{4}-\d\d-\d\d\s\d\d:\d\d:\d\d(.\d+)?\s(\+|-)\d\d\d\d/;
 const removeTimeStamp = (string) => {
   const timeStamp = timeStampRegex.exec(string);
   if (timeStamp) {
