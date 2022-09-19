@@ -192,7 +192,7 @@ module.exports = (input) => {
 };
 
 const fileNameDiffRegex = /a\/.*(?=["']? ["']?b\/)|b\/.*$/g;
-const gitFileHeaderRegex = /^(a|b)\//;
+const gitFileHeaderRegex = /^(a|b|i|w|c|o|1|2)\//;
 const parseFiles = (line) => {
   let fileNames = line?.match(fileNameDiffRegex);
   return fileNames?.map((fileName) =>
