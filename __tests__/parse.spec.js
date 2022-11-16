@@ -38,6 +38,23 @@ index 123..456 789
     expect(chunk.changes[1].content).toBe("+ line2");
   });
 
+  it("should parse file names when diff.mnemonicPrefix equals true", function () {
+    const diff = `\
+diff --git i/file w/file
+index 123..456 789
+--- i/file
++++ w/file
+@@ -1,2 +1,2 @@
+- line1
++ line2\
+`;
+    const files = parse(diff);
+    expect(files.length).toBe(1);
+    const file = files[0];
+    expect(file.from).toBe("file");
+    expect(file.to).toBe("file");
+  });
+
   it("should parse simple git-like diff with file enclosed by double-quote", function () {
     const diff = `\
 diff --git "a/file1" "b/file2"
