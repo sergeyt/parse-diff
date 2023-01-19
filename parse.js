@@ -163,6 +163,7 @@ module.exports = (input) => {
   ];
 
   const schemaContent = [
+    [/^\\ No newline at end of file$/, eof],
     [/^-/, del],
     [/^\+/, add],
     [/^\s+/, normal],

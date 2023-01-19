@@ -258,8 +258,9 @@ index 123..456 789
 +++ b/file1
 @@ -1,1 +1,1 @@
 - line1
+\\ No newline at end of file
 + line2
-\\ No newline at end of file\
+\\ No newline at end of file
 `;
     const files = parse(diff);
     expect(files.length).toBe(1);
@@ -270,11 +271,13 @@ index 123..456 789
     expect(file.newMode).toBe("789");
     const chunk = file.chunks[0];
     expect(chunk.content).toBe("@@ -1,1 +1,1 @@");
-    expect(chunk.changes.length).toBe(3);
+    expect(chunk.changes.length).toBe(4);
     expect(chunk.changes[0].content).toBe("- line1");
-    expect(chunk.changes[1].content).toBe("+ line2");
-    expect(chunk.changes[2].type).toBe("add");
-    expect(chunk.changes[2].content).toBe("\\ No newline at end of file");
+    expect(chunk.changes[1].type).toBe("del");
+    expect(chunk.changes[1].content).toBe("\\ No newline at end of file");
+    expect(chunk.changes[2].content).toBe("+ line2");
+    expect(chunk.changes[3].type).toBe("add");
+    expect(chunk.changes[3].content).toBe("\\ No newline at end of file");
   });
 
   it("should parse gnu sample diff", function () {
