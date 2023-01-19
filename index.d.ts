@@ -7,6 +7,8 @@ declare namespace parseDiff {
     additions: number;
     from?: string;
     to?: string;
+    oldMode?: string;
+    newMode?: string;
     index?: string[];
     deleted?: true;
     new?: true;

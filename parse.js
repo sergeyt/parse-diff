@@ -42,21 +42,36 @@ module.exports = (input) => {
     if (!currentFile || currentFile.chunks.length) start();
   };
 
-  const newFile = () => {
+  const newFile = (_, match) => {
     restart();
     currentFile.new = true;
+    currentFile.newMode = match[1];
     currentFile.from = "/dev/null";
   };
 
-  const deletedFile = () => {
+  const deletedFile = (_, match) => {
     restart();
     currentFile.deleted = true;
+    currentFile.oldMode = match[1];
     currentFile.to = "/dev/null";
   };
 
-  const index = (line) => {
+  const oldMode = (_, match) => {
+    restart();
+    currentFile.oldMode = match[1];
+  };
+
+  const newMode = (_, match) => {
+    restart();
+    currentFile.newMode = match[1];
+  };
+
+  const index = (line, match) => {
     restart();
     currentFile.index = line.split(" ").slice(1);
+    if (match[1]) {
+      currentFile.oldMode = currentFile.newMode = match[1].trim();
+    }
   };
 
   const fromFile = (line) => {
@@ -136,8 +151,10 @@ module.exports = (input) => {
 
   const schemaHeaders = [
     [/^diff\s/, start],
-    [/^new file mode \d+$/, newFile],
-    [/^deleted file mode \d+$/, deletedFile],
+    [/^new file mode (\d+)$/, newFile],
+    [/^deleted file mode (\d+)$/, deletedFile],
+    [/^old mode (\d+)$/, oldMode],
+    [/^new mode (\d+)$/, newMode],
     [/^index\s[\da-zA-Z]+\.\.[\da-zA-Z]+(\s(\d+))?$/, index],
     [/^---\s/, fromFile],
     [/^\+\+\+\s/, toFile],
