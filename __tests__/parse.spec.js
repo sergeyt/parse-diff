@@ -375,7 +375,7 @@ Index: text.txt
     expect(file.chunks[0].changes.length).toBe(1);
   });
 
-  it("should parse Octokit list files of pull request output", function () {
+  it("should parse GitHub API patch diff when listing files of a pull request", function () {
     const diff = `@@ -1 +1 @@
 -hello world
 +hello universe`;
