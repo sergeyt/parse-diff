@@ -375,6 +375,30 @@ Index: text.txt
     expect(file.chunks[0].changes.length).toBe(1);
   });
 
+  it("should parse Octokit list files of pull request output", function () {
+    const diff = `@@ -1 +1 @@
+-hello world
++hello universe`;
+
+    const files = parse(diff);
+    expect(files.length).toBe(1);
+    const [file] = files;
+    expect(file.chunks[0].content).toBe(
+      "@@ -1 +1 @@"
+    );
+    expect(file.from).toBeUndefined();
+    expect(file.to).toBeUndefined();
+    expect(file.oldMode).toBeUndefined();
+    expect(file.newMode).toBeUndefined();
+    expect(file.deletions).toBe(1);
+    expect(file.additions).toBe(1);
+    expect(file.chunks[0].oldStart).toBe(1);
+    expect(file.chunks[0].oldLines).toBe(1);
+    expect(file.chunks[0].newStart).toBe(1);
+    expect(file.chunks[0].newLines).toBe(1);
+    expect(file.chunks[0].changes.length).toBe(2);
+  });
+
   it("should parse file names for n new empty file", function () {
     const diff = `\
 diff --git a/newFile.txt b/newFile.txt
