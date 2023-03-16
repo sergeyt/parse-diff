@@ -383,9 +383,7 @@ Index: text.txt
     const files = parse(diff);
     expect(files.length).toBe(1);
     const [file] = files;
-    expect(file.chunks[0].content).toBe(
-      "@@ -1 +1 @@"
-    );
+    expect(file.chunks[0].content).toBe("@@ -1 +1 @@");
     expect(file.from).toBeUndefined();
     expect(file.to).toBeUndefined();
     expect(file.oldMode).toBeUndefined();
