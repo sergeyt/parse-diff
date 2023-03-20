@@ -87,7 +87,7 @@ module.exports = (input) => {
   const toNumOfLines = (number) => +(number || 1);
 
   const chunk = (line, match) => {
-    if (!currentFile) return;
+    if (!currentFile) start(line);
 
     const [oldStart, oldNumLines, newStart, newNumLines] = match.slice(1);
 
