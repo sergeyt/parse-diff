@@ -19,9 +19,9 @@ jobs:
           persist-credentials: false
 
       - name: set up node.js
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@master
         with:
-          node-version: "14.x"
+          node-version: "22"
 
       - name: lint and test
         run: npm install && npm run ci
