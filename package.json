@@ -16,16 +16,14 @@
     "parser"
   ],
   "devDependencies": {
-    "@babel/cli": "^7.28.6",
-    "@babel/core": "^7.29.0",
-    "@babel/preset-env": "^7.29.2",
     "@biomejs/biome": "^2.4.12",
+    "esbuild": "^0.28.0",
     "jest": "^30.3.0"
   },
   "scripts": {
     "lint:fix": "biome check --write .",
     "lint": "biome check .",
-    "build": "babel -o index.js --minified parse.js",
+    "build": "esbuild parse.js --minify --outfile=index.js",
     "test": "jest",
     "ci": "npm run lint && npm test"
   }
