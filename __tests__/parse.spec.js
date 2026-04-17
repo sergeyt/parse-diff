@@ -517,4 +517,180 @@ index 123..456 789
     expect(file2.newMode).toBe("789");
     expect(file2.chunks[0].changes.length).toBe(3);
   });
+
+  describe("empty context lines (suppressBlankEmpty)", function () {
+    it("should parse empty context line between del and add", function () {
+      // Simulates diff.suppressBlankEmpty=true: blank context line has no leading space
+      const diff = `\
+diff --git a/file b/file
+index 123..456 789
+--- a/file
++++ b/file
+@@ -1,3 +1,3 @@
+-old line
++new line
+
+ keep this\
+`;
+      const files = parse(diff);
+      expect(files.length).toBe(1);
+      const chunk = files[0].chunks[0];
+      expect(chunk.changes.length).toBe(4);
+      expect(chunk.changes[0].type).toBe("del");
+      expect(chunk.changes[1].type).toBe("add");
+      expect(chunk.changes[2].type).toBe("normal");
+      expect(chunk.changes[2].content).toBe("");
+      expect(chunk.changes[2].ln1).toBe(2);
+      expect(chunk.changes[2].ln2).toBe(2);
+      expect(chunk.changes[3].type).toBe("normal");
+      expect(chunk.changes[3].content).toBe(" keep this");
+    });
+
+    it("should parse empty context line at start of hunk", function () {
+      const diff = `\
+diff --git a/file b/file
+index 123..456 789
+--- a/file
++++ b/file
+@@ -1,2 +1,2 @@
+
+-old
++new\
+`;
+      const files = parse(diff);
+      expect(files.length).toBe(1);
+      const chunk = files[0].chunks[0];
+      expect(chunk.changes.length).toBe(3);
+      expect(chunk.changes[0].type).toBe("normal");
+      expect(chunk.changes[0].content).toBe("");
+      expect(chunk.changes[1].type).toBe("del");
+      expect(chunk.changes[2].type).toBe("add");
+    });
+
+    it("should parse empty context line at end of hunk", function () {
+      const diff = `\
+diff --git a/file b/file
+index 123..456 789
+--- a/file
++++ b/file
+@@ -1,2 +1,2 @@
+-old
++new
+\
+`;
+      const files = parse(diff);
+      expect(files.length).toBe(1);
+      const chunk = files[0].chunks[0];
+      expect(chunk.changes.length).toBe(3);
+      expect(chunk.changes[0].type).toBe("del");
+      expect(chunk.changes[1].type).toBe("add");
+      expect(chunk.changes[2].type).toBe("normal");
+      expect(chunk.changes[2].content).toBe("");
+    });
+
+    it("should parse multiple consecutive empty context lines", function () {
+      const diff = `\
+diff --git a/file b/file
+index 123..456 789
+--- a/file
++++ b/file
+@@ -1,4 +1,4 @@
+-old
++new
+
+
+ keep\
+`;
+      const files = parse(diff);
+      expect(files.length).toBe(1);
+      const chunk = files[0].chunks[0];
+      expect(chunk.changes.length).toBe(5);
+      expect(chunk.changes[0].type).toBe("del");
+      expect(chunk.changes[1].type).toBe("add");
+      expect(chunk.changes[2].type).toBe("normal");
+      expect(chunk.changes[2].content).toBe("");
+      expect(chunk.changes[3].type).toBe("normal");
+      expect(chunk.changes[3].content).toBe("");
+      expect(chunk.changes[4].type).toBe("normal");
+    });
+
+    it("should not lose second hunk when first has empty context line", function () {
+      const diff = `\
+diff --git a/file b/file
+index 123..456 789
+--- a/file
++++ b/file
+@@ -1,2 +1,2 @@
+-old1
++new1
+
+@@ -10,1 +10,1 @@
+-old2
++new2\
+`;
+      const files = parse(diff);
+      expect(files.length).toBe(1);
+      expect(files[0].chunks.length).toBe(2);
+      const chunk0 = files[0].chunks[0];
+      expect(chunk0.changes.length).toBe(3);
+      expect(chunk0.changes[2].type).toBe("normal");
+      expect(chunk0.changes[2].content).toBe("");
+      const chunk1 = files[0].chunks[1];
+      expect(chunk1.oldStart).toBe(10);
+      expect(chunk1.changes.length).toBe(2);
+      expect(chunk1.changes[0].type).toBe("del");
+      expect(chunk1.changes[1].type).toBe("add");
+    });
+
+    it("should not lose second file when first has empty context line", function () {
+      const diff = `\
+diff --git a/file1 b/file1
+index 123..456 789
+--- a/file1
++++ b/file1
+@@ -1,2 +1,2 @@
+-old
++new
+
+diff --git a/file2 b/file2
+index 123..456 789
+--- a/file2
++++ b/file2
+@@ -1,1 +1,1 @@
+-old2
++new2\
+`;
+      const files = parse(diff);
+      expect(files.length).toBe(2);
+      expect(files[0].from).toBe("file1");
+      expect(files[0].chunks[0].changes.length).toBe(3);
+      expect(files[1].from).toBe("file2");
+      expect(files[1].chunks[0].changes.length).toBe(2);
+    });
+
+    it("should still parse normal context lines with leading space", function () {
+      // Regression guard: standard context lines (with leading space) must still work
+      const diff = `\
+diff --git a/file b/file
+index 123..456 789
+--- a/file
++++ b/file
+@@ -1,3 +1,3 @@
+ context before
+-old
++new
+ context after\
+`;
+      const files = parse(diff);
+      expect(files.length).toBe(1);
+      const chunk = files[0].chunks[0];
+      expect(chunk.changes.length).toBe(4);
+      expect(chunk.changes[0].type).toBe("normal");
+      expect(chunk.changes[0].content).toBe(" context before");
+      expect(chunk.changes[1].type).toBe("del");
+      expect(chunk.changes[2].type).toBe("add");
+      expect(chunk.changes[3].type).toBe("normal");
+      expect(chunk.changes[3].content).toBe(" context after");
+    });
+  });
 });
