@@ -168,7 +168,7 @@ module.exports = (input) => {
     [/^\\ No newline at end of file$/, eof],
     [/^-/, del],
     [/^\+/, add],
-    [/^\s+/, normal],
+    [/^\s*/, normal],
   ];
 
   const parseContentLine = (line) => {
