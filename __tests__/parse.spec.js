@@ -1,6 +1,6 @@
 const parse = require("../index");
 
-describe("diff parser", function () {
+describe("diff parser", () => {
   it("should parse null", () => {
     expect(parse(null).length).toBe(0);
   });
@@ -13,7 +13,7 @@ describe("diff parser", function () {
     expect(parse(" ").length).toBe(0);
   });
 
-  it("should parse simple git-like diff", function () {
+  it("should parse simple git-like diff", () => {
     const diff = `\
 diff --git a/file b/file
 index 123..456 789
@@ -40,7 +40,7 @@ index 123..456 789
     expect(chunk.changes[1].content).toBe("+ line2");
   });
 
-  it("should parse file names when diff.mnemonicPrefix equals true", function () {
+  it("should parse file names when diff.mnemonicPrefix equals true", () => {
     const diff = `\
 diff --git i/file w/file
 index 123..456 789
@@ -57,7 +57,7 @@ index 123..456 789
     expect(file.to).toBe("file");
   });
 
-  it("should parse simple git-like diff with file enclosed by double-quote", function () {
+  it("should parse simple git-like diff with file enclosed by double-quote", () => {
     const diff = `\
 diff --git "a/file1" "b/file2"
 similarity index 100%
@@ -72,7 +72,7 @@ rename to "file2"\
     expect(file.chunks.length).toBe(0);
   });
 
-  it("should parse file names for changed binaries with spaces in their names", function () {
+  it("should parse file names for changed binaries with spaces in their names", () => {
     const diff = `\
 diff --git a/Artsy_Tests/ReferenceImages/ARTopMenuViewControllerSpec/selects 'home' by default as ipad@2x.png b/Artsy_Tests/ReferenceImages/ARTopMenuViewControllerSpec/selects 'home' by default as ipad@2x.png
 index fc72ba34b..ec373e9a4 100644
@@ -91,7 +91,7 @@ Binary files a/Artsy_Tests/ReferenceImages/ARTopMenuViewControllerSpec/selects '
     expect(file.newMode).toBe("100644");
   });
 
-  it("should parse diff with new file mode line", function () {
+  it("should parse diff with new file mode line", () => {
     const diff = `\
 diff --git a/test b/test
 new file mode 100644
@@ -115,7 +115,7 @@ index 0000000..db81be4
     expect(file.chunks[0].changes[1].content).toBe("+line2");
   });
 
-  it("should parse diff with deleted file mode line", function () {
+  it("should parse diff with deleted file mode line", () => {
     const diff = `\
 diff --git a/test b/test
 deleted file mode 100644
@@ -139,7 +139,7 @@ index db81be4..0000000
     expect(file.chunks[0].changes[1].content).toBe("-line2");
   });
 
-  it("should parse diff with old and new mode lines", function () {
+  it("should parse diff with old and new mode lines", () => {
     const diff = `\
 diff --git a/file b/file
 old mode 100644
@@ -168,7 +168,7 @@ index 123..456
     expect(chunk.changes[1].content).toBe("+ line2");
   });
 
-  it("should parse diff with single line files", function () {
+  it("should parse diff with single line files", () => {
     const diff = `\
 diff --git a/file1 b/file1
 deleted file mode 100644
@@ -211,7 +211,7 @@ index 0000000..db81be4
     expect(file.chunks[0].changes[0].type).toBe("add");
   });
 
-  it("should parse multiple files in diff", function () {
+  it("should parse multiple files in diff", () => {
     const diff = `\
 diff --git a/file1 b/file1
 index 123..456 789
@@ -250,7 +250,7 @@ index 123..456 789
     expect(file.chunks[0].changes[1].content).toBe("+ line2");
   });
 
-  it("should parse diff with EOF flag", function () {
+  it("should parse diff with EOF flag", () => {
     const diff = `\
 diff --git a/file1 b/file1
 index 123..456 789
@@ -280,7 +280,7 @@ index 123..456 789
     expect(chunk.changes[3].content).toBe("\\ No newline at end of file");
   });
 
-  it("should parse gnu sample diff", function () {
+  it("should parse gnu sample diff", () => {
     const diff = `\
 --- lao	2002-02-21 23:30:39.942229878 -0800
 +++ tzu	2002-02-21 23:30:50.442260588 -0800
@@ -320,7 +320,7 @@ index 123..456 789
     expect(chunk1.newLines).toBe(6);
   });
 
-  it("should parse hg diff output", function () {
+  it("should parse hg diff output", () => {
     const diff = `\
 diff -r 514fc757521e lib/parsers.coffee
 --- a/lib/parsers.coffee	Thu Jul 09 00:56:36 2015 +0200
@@ -344,7 +344,7 @@ diff -r 514fc757521e lib/parsers.coffee
     expect(file.to).toBe("lib/parsers.coffee");
   });
 
-  it("should parse svn diff output", function () {
+  it("should parse svn diff output", () => {
     const diff = `\
 Index: new.txt
 ===================================================================
@@ -375,7 +375,7 @@ Index: text.txt
     expect(file.chunks[0].changes.length).toBe(1);
   });
 
-  it("should parse GitHub API patch diff when listing files of a pull request", function () {
+  it("should parse GitHub API patch diff when listing files of a pull request", () => {
     const diff = `@@ -1 +1 @@
 -hello world
 +hello universe`;
@@ -397,7 +397,7 @@ Index: text.txt
     expect(file.chunks[0].changes.length).toBe(2);
   });
 
-  it("should parse file names for n new empty file", function () {
+  it("should parse file names for n new empty file", () => {
     const diff = `\
 diff --git a/newFile.txt b/newFile.txt
 new file mode 100644
@@ -411,7 +411,7 @@ index 0000000..e6a2e28\
     expect(file.newMode).toBe("100644");
   });
 
-  it("should parse file names for a deleted file", function () {
+  it("should parse file names for a deleted file", () => {
     const diff = `\
 diff --git a/deletedFile.txt b/deletedFile.txt
 deleted file mode 100644
@@ -425,7 +425,7 @@ index e6a2e28..0000000\
     expect(file.oldMode).toBe("100644");
   });
 
-  it("should parse rename diff with space in path with no changes", function () {
+  it("should parse rename diff with space in path with no changes", () => {
     const diff = `\
 diff --git a/My Folder/File b/My Folder/a/File
 similarity index 100%
@@ -440,7 +440,7 @@ rename to My Folder/a/File\
     expect(file.chunks.length).toBe(0);
   });
 
-  it("should parse rename diff with space in path with changes", function () {
+  it("should parse rename diff with space in path with changes", () => {
     const diff = `\
 diff --git a/My Folder/File b/My Folder/a/File
 similarity index 100%
@@ -463,7 +463,7 @@ rename to My Folder/a/File
     expect(chunk.changes[1].content).toBe("+ line2");
   });
 
-  it("should parse diff with single line quote escaped file names", function () {
+  it("should parse diff with single line quote escaped file names", () => {
     const diff = `
 diff --git "a/file \\"space\\"" "b/file \\"space\\""
 index 9daeafb..88bd214 100644
@@ -482,7 +482,7 @@ index 9daeafb..88bd214 100644
     expect(file.newMode).toBe("100644");
   });
 
-  it("should parse files with additional '-' and '+'", function () {
+  it("should parse files with additional '-' and '+'", () => {
     const diff = `\
 diff --git a/file1 b/file1
 index 123..456 789
@@ -518,8 +518,8 @@ index 123..456 789
     expect(file2.chunks[0].changes.length).toBe(3);
   });
 
-  describe("empty context lines (suppressBlankEmpty)", function () {
-    it("should parse empty context line between del and add", function () {
+  describe("empty context lines (suppressBlankEmpty)", () => {
+    it("should parse empty context line between del and add", () => {
       // Simulates diff.suppressBlankEmpty=true: blank context line has no leading space
       const diff = `\
 diff --git a/file b/file
@@ -546,7 +546,7 @@ index 123..456 789
       expect(chunk.changes[3].content).toBe(" keep this");
     });
 
-    it("should parse empty context line at start of hunk", function () {
+    it("should parse empty context line at start of hunk", () => {
       const diff = `\
 diff --git a/file b/file
 index 123..456 789
@@ -567,7 +567,7 @@ index 123..456 789
       expect(chunk.changes[2].type).toBe("add");
     });
 
-    it("should parse empty context line at end of hunk", function () {
+    it("should parse empty context line at end of hunk", () => {
       const diff = `\
 diff --git a/file b/file
 index 123..456 789
@@ -588,7 +588,7 @@ index 123..456 789
       expect(chunk.changes[2].content).toBe("");
     });
 
-    it("should parse multiple consecutive empty context lines", function () {
+    it("should parse multiple consecutive empty context lines", () => {
       const diff = `\
 diff --git a/file b/file
 index 123..456 789
@@ -614,7 +614,7 @@ index 123..456 789
       expect(chunk.changes[4].type).toBe("normal");
     });
 
-    it("should not lose second hunk when first has empty context line", function () {
+    it("should not lose second hunk when first has empty context line", () => {
       const diff = `\
 diff --git a/file b/file
 index 123..456 789
@@ -642,7 +642,7 @@ index 123..456 789
       expect(chunk1.changes[1].type).toBe("add");
     });
 
-    it("should not lose second file when first has empty context line", function () {
+    it("should not lose second file when first has empty context line", () => {
       const diff = `\
 diff --git a/file1 b/file1
 index 123..456 789
@@ -668,7 +668,7 @@ index 123..456 789
       expect(files[1].chunks[0].changes.length).toBe(2);
     });
 
-    it("should still parse normal context lines with leading space", function () {
+    it("should still parse normal context lines with leading space", () => {
       // Regression guard: standard context lines (with leading space) must still work
       const diff = `\
 diff --git a/file b/file

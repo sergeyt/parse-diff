@@ -215,7 +215,7 @@ const fileNameDiffRegex =
   /(a|i|w|c|o|1|2)\/.*(?=["']? ["']?(b|i|w|c|o|1|2)\/)|(b|i|w|c|o|1|2)\/.*$/g;
 const gitFileHeaderRegex = /^(a|b|i|w|c|o|1|2)\//;
 const parseFiles = (line) => {
-  let fileNames = line?.match(fileNameDiffRegex);
+  const fileNames = line?.match(fileNameDiffRegex);
   return fileNames?.map((fileName) =>
     fileName.replace(gitFileHeaderRegex, "").replace(/("|')$/, "")
   );
@@ -234,7 +234,7 @@ const leftTrimChars = (string, trimmingChars) => {
   string = makeString(string);
   if (!trimmingChars && String.prototype.trimLeft) return string.trimLeft();
 
-  let trimmingString = formTrimmingString(trimmingChars);
+  const trimmingString = formTrimmingString(trimmingChars);
 
   return string.replace(new RegExp(`^${trimmingString}+`), "");
 };
@@ -258,4 +258,4 @@ const formTrimmingString = (trimmingChars) => {
   )}]`;
 };
 
-const makeString = (itemToConvert) => (itemToConvert ?? "") + "";
+const makeString = (itemToConvert) => `${itemToConvert ?? ""}`;
