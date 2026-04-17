@@ -11,7 +11,7 @@ on:
 jobs:
   verify:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 5
 
     steps:
       - uses: actions/checkout@master
@@ -21,7 +21,7 @@ jobs:
       - name: set up node.js
         uses: actions/setup-node@master
         with:
-          node-version: "22"
+          node-version: "24"
 
       - name: lint and test
         run: npm install && npm run ci
