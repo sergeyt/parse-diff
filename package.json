@@ -16,9 +16,9 @@
     "parser"
   ],
   "devDependencies": {
-    "@biomejs/biome": "^2.4.12",
-    "esbuild": "^0.28.0",
-    "jest": "^30.3.0"
+    "@biomejs/biome": "^2.6.8",
+    "esbuild": "^0.28.2",
+    "jest": "^30.5.2"
   },
   "scripts": {
     "lint:fix": "biome check --write .",
