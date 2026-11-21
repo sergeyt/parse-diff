@@ -21,7 +21,7 @@ jobs:
       - name: set up node.js
         uses: actions/setup-node@master
         with:
-          node-version: "24"
+          node-version: "26"
 
       - name: lint and test
         run: npm install && npm run ci

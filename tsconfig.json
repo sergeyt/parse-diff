@@ -1,11 +1,10 @@
 {
   "compilerOptions": {
     "target": "es2022",
-    "module": "commonjs",
+    "module": "nodenext",
     "strict": true,
-    "declaration": true,
-    "emitDeclarationOnly": true,
-    "types": []
+    "noEmit": true,
+    "types": ["node"]
   },
-  "files": ["index.ts"]
+  "files": ["index.ts", "__tests__/parse.spec.ts"]
 }
