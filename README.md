@@ -5,20 +5,26 @@
 
 # parse-diff
 
-Simple unified diff parser for JavaScript
+Simple unified diff parser for JavaScript and TypeScript
 
-## JavaScript Usage Example
+## TypeScript Usage Example
 
-```javascript
-var parse = require('parse-diff');
-var diff = ''; // input diff string
-var files = parse(diff);
+```typescript
+import parse from "parse-diff";
+
+const diff = ""; // input diff string
+const files = parse(diff);
 console.log(files.length); // number of patched files
-files.forEach(function(file) {
-	console.log(file.chunks.length); // number of hunks
-	console.log(file.chunks[0].changes.length) // hunk added/deleted/context lines
-	// each item in changes is a string
-	console.log(file.deletions); // number of deletions in the patch
-	console.log(file.additions); // number of additions in the patch
-});
+for (const file of files) {
+  console.log(file.chunks.length); // number of hunks
+  console.log(file.chunks[0].changes.length); // hunk added/deleted/context lines
+  // each item in changes is an object; its text is in `content`
+  console.log(file.deletions); // number of deletions in the patch
+  console.log(file.additions); // number of additions in the patch
+}
 ```
+
+Types are bundled with the package. Use `import parse = require("parse-diff")`
+if your `tsconfig.json` has neither `esModuleInterop` nor
+`allowSyntheticDefaultImports` enabled. In plain CommonJS JavaScript, use
+`const parse = require("parse-diff")`.
