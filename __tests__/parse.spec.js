@@ -693,4 +693,35 @@ index 123..456 789
       expect(chunk.changes[3].content).toBe(" context after");
     });
   });
+
+  describe("hunk header parsing", () => {
+    it("should parse hunk header ranges with and without line counts", () => {
+      const cases = [
+        ["@@ -1,2 +3,4 @@", [1, 2, 3, 4]],
+        ["@@ -1 +1 @@", [1, 1, 1, 1]],
+        ["@@ -5 +5,2 @@", [5, 1, 5, 2]],
+        ["@@ -12,3 +34 @@", [12, 3, 34, 1]],
+      ];
+      for (const [header, [oldStart, oldLines, newStart, newLines]] of cases) {
+        const [chunk] = parse(`--- a/file\n+++ b/file\n${header}\n`)[0].chunks;
+        expect(chunk).toMatchObject({
+          content: header,
+          oldStart,
+          oldLines,
+          newStart,
+          newLines,
+        });
+      }
+    });
+
+    it("should not hang on a malformed hunk header (ReDoS)", () => {
+      // The old pattern backtracked cubically on long digit runs when the
+      // closing " @@" was missing (~4 KB took ~20 s).
+      const digits = "0".repeat(5000);
+      const start = Date.now();
+      const files = parse(`@@ -${digits} +${digits}`);
+      expect(Date.now() - start).toBeLessThan(500);
+      expect(files.flatMap((file) => file.chunks)).toEqual([]);
+    });
+  });
 });

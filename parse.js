@@ -160,7 +160,7 @@ module.exports = (input) => {
     [/^index\s[\da-zA-Z]+\.\.[\da-zA-Z]+(\s(\d+))?$/, index],
     [/^---\s/, fromFile],
     [/^\+\+\+\s/, toFile],
-    [/^@@\s+-(\d+),?(\d+)?\s+\+(\d+),?(\d+)?\s@@/, chunk],
+    [/^@@\s+-(\d+)(?:,(\d+))?\s+\+(\d+)(?:,(\d+))?\s@@/, chunk],
     [/^\\ No newline at end of file$/, eof],
   ];
 
