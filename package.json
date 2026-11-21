@@ -18,13 +18,18 @@
   "devDependencies": {
     "@biomejs/biome": "^2.6.8",
     "esbuild": "^0.28.2",
-    "jest": "^30.5.2"
+    "jest": "^30.5.2",
+    "typescript": "^7.0.2"
   },
   "scripts": {
     "lint:fix": "biome check --write .",
     "lint": "biome check .",
-    "build": "esbuild parse.js --minify --outfile=index.js",
+    "typecheck": "tsc --noEmit",
+    "build:js": "esbuild index.ts --minify --format=cjs --platform=node --outfile=index.js",
+    "build:types": "tsc",
+    "build": "npm run build:js && npm run build:types",
+    "pretest": "npm run build",
     "test": "jest",
-    "ci": "npm run lint && npm test"
+    "ci": "npm run lint && npm run typecheck && npm test"
   }
 }
